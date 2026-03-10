@@ -16,7 +16,7 @@
 
 
 ## インストール
-1. [EasyKoten-installer.bat](/EasyKoten/EasyKoten-installer.bat) 右クリックから”名前を付けてリンク先を保存”します。
+1. [EasyKoten-installer.bat](/EasyKoten/EasyKoten-installer.bat) を右クリックから表示されるメニューの「名前を付けてリンク先を保存」を用いて保存します。
 このとき、リンクを開いた後に右クリックから保存すると、*.batファイルではなく*.txtファイルになり実行できなくなります。
 
 3. インストール先のからフォルダーをc:\EasyKotenOcrなど浅いパスに用意して、EasyKoten-installer.batを配置して実行します。
@@ -156,6 +156,7 @@ python main.py infer input_root output_dir -a
 
 #### オプション情報の保存
 出力ディレクトリでは、実行時に指定したオプション情報が`opt.json`に保存されています。
+
 
 
 
