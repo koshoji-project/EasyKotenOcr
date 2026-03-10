@@ -35,12 +35,12 @@ if __name__ == "__main__":
     models = [
         {
             "url": "https://lab.ndl.go.jp/dataset/ndlkotensekiocr/trocr/model-ver2.zip",
-            "dest": "src/text_kotenseki_recognition/model-ver2.zip",
-            "extract_to": "src/text_kotenseki_recognition/"
+            "dest": "../src/text_kotenseki_recognition/model-ver2.zip",
+            "extract_to": "../src/text_kotenseki_recognition/"
         },
         {
             "url": "https://lab.ndl.go.jp/dataset/ndlkotensekiocr/layoutmodel/ndl_kotenseki_layout_ver3.pth",
-            "dest": "src/ndl_kotenseki_layout/models/ndl_kotenseki_layout_ver3.pth",
+            "dest": "../src/ndl_kotenseki_layout/models/ndl_kotenseki_layout_ver3.pth",
             "extract_to": None
         }
     ]
