@@ -1,7 +1,7 @@
 # Easy古典OCR(ver.1)
 
 古典の画像ファイルに対してOCR処理を行いテキスト化するためのアプリケーションを提供するリポジトリです。 
-本プログラムは、国立国会図書館の[NDLラボ](https://lab.ndl.go.jp)が公開しているNDL古典籍OCR_cli[ver.3](https://github.com/ndl-lab/ndlkotenocr_cli)を基に、DockerやLinuxに関する知識がないユーザーにも利用しやすいように改変を加えたものです。
+本プログラムは、国立国会図書館の[NDLラボ](https://lab.ndl.go.jp)が公開している[NDL古典籍OCR_cli ver.3](https://github.com/ndl-lab/ndlkotenocr_cli)を基に、DockerやLinuxに関する知識がないユーザーにも利用しやすいように改変を加えたものです。
 
 
 本プログラムは、高勝寺プロジェクトがCC BY 4.0ライセンスで公開するものです。詳細については
@@ -10,15 +10,13 @@
 
 ## 環境構築
 
-### 1. バッチファイルのダウンロード
-下記のコマンドを実行してください。
-```
-git clone https://github.com/ndl-lab/ndlkotenocr_cli
-```
+### インストール
+1. [EasyKoten-installer.bat](https://github.com/koshoji-project/EasyKotenOCr/tree/main/EasyKoten/EasyKoten-installer.bat)を右クリックから保存します。
+このとき、リンクを開いた後に右クリックから保存すると、*.batファイルではなく＊。ｔｘｔファイルになり実行できなくなります。
 
-### 2. インストール
+2. インストール先のからフォルダーをc:\EasyKotenOcrなど浅いパスに用意して、EasyKoten-installer.batを配置して実行します。
 
-### 3. OCRの実行
+### 2. OCRの実行
 
 ### 環境構築後のディレクトリ構成（参考）
 ```
