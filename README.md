@@ -11,7 +11,7 @@
 ## 環境構築
 
 ### インストール
-1. [EasyKoten-installer.bat](https://github.com/koshoji-project/EasyKotenOcr/blob/main/EasyKoten/EasyKoten-installer.bat)右クリックから”名前を付けてリンク先を保存”します。
+1. [EasyKoten-installer.bat](https://github.com/koshoji-project/EasyKotenOcr/raw/main/EasyKoten/EasyKoten-installer.bat)右クリックから”名前を付けてリンク先を保存”します。
 このとき、リンクを開いた後に右クリックから保存すると、*.batファイルではなく＊。ｔｘｔファイルになり実行できなくなります。
 
 2. インストール先のからフォルダーをc:\EasyKotenOcrなど浅いパスに用意して、EasyKoten-installer.batを配置して実行します。
@@ -151,6 +151,7 @@ python main.py infer input_root output_dir -a
 
 #### オプション情報の保存
 出力ディレクトリでは、実行時に指定したオプション情報が`opt.json`に保存されています。
+
 
 
 
