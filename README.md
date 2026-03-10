@@ -4,7 +4,7 @@
 本プログラムは、国立国会図書館の[NDLラボ](https://lab.ndl.go.jp)が公開している[NDL古典籍OCR_cli ver.3](https://github.com/ndl-lab/ndlkotenocr_cli)を基に、DockerやLinuxに関する知識がないユーザーにも利用しやすいように改変を加えたものです。
 
 
-本プログラムは、高勝寺プロジェクトがCC BY 4.0ライセンスで公開するものです。詳細については
+本プログラムは、高勝寺プロジェクトがCC BY 4.0ライセンスの下に公開します。詳細については
 [LICENSE](./LICENSE
 )をご覧ください。
 
@@ -151,6 +151,7 @@ python main.py infer input_root output_dir -a
 
 #### オプション情報の保存
 出力ディレクトリでは、実行時に指定したオプション情報が`opt.json`に保存されています。
+
 
 
 
