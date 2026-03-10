@@ -11,7 +11,7 @@
 ## 環境構築
 
 ### インストール
-1. [EasyKoten-installer.bat](https://github.com/koshoji-project/EasyKotenOCr/tree/main/EasyKoten/EasyKoten-installer.bat)を右クリックから保存します。
+1. [EasyKoten-installer.bat](https://github.com/koshoji-project/EasyKotenOCr/tree/main/EasyKoten/EasyKoten-installer.bat)を右クリックから”名前を付けてリンク先を保存”します。
 このとき、リンクを開いた後に右クリックから保存すると、*.batファイルではなく＊。ｔｘｔファイルになり実行できなくなります。
 
 2. インストール先のからフォルダーをc:\EasyKotenOcrなど浅いパスに用意して、EasyKoten-installer.batを配置して実行します。
