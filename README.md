@@ -8,17 +8,15 @@
 [LICENSE](./LICENSE
 )をご覧ください。
 
-## 環境構築
-
-### インストール
+## インストール
 1. [EasyKoten-installer.bat](/EasyKoten/EasyKoten-installer.bat) 右クリックから”名前を付けてリンク先を保存”します。
 このとき、リンクを開いた後に右クリックから保存すると、*.batファイルではなく＊。ｔｘｔファイルになり実行できなくなります。
 
 3. インストール先のからフォルダーをc:\EasyKotenOcrなど浅いパスに用意して、EasyKoten-installer.batを配置して実行します。
 
-### 2. OCRの実行
+## 2. OCRの実行
 
-### 環境構築後のディレクトリ構成（参考）
+## 環境構築後のディレクトリ構成（参考）
 ```
 EasyKotenOCR
 ├── main.py : メインとなるPythonスクリプト
@@ -151,6 +149,7 @@ python main.py infer input_root output_dir -a
 
 #### オプション情報の保存
 出力ディレクトリでは、実行時に指定したオプション情報が`opt.json`に保存されています。
+
 
 
 
