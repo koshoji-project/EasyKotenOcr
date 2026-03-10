@@ -1,7 +1,7 @@
 # Easy古典OCR(ver.1)
 
 古典籍をテキスト化するためのOCRアプリケーションです。 
-本プログラムは、国立国会図書館の[NDLラボ](https://lab.ndl.go.jp)が公開している[NDL古典籍OCR_cli ver.3](https://github.com/ndl-lab/ndlkotenocr_cli)を基に、DockerやLinuxに関する知識がないユーザーにも利用しやすいように改変を加えたものです。
+本プログラムは、国立国会図書館の[NDLラボ](https://lab.ndl.go.jp)が公開している[NDL古典籍OCR_cli ver.3](https://github.com/ndl-lab/ndlkotenocr_cli)を基に、DockerやLinuxに関する知識がないユーザーでも利用できるように改変を加えたものです。
 
 
 本プログラムに適用するライセンスは、CC BY 4.0です。ライセンス詳細は[LICENSE](./LICENSE)をご覧ください。
@@ -156,6 +156,7 @@ python main.py infer input_root output_dir -a
 
 #### オプション情報の保存
 出力ディレクトリでは、実行時に指定したオプション情報が`opt.json`に保存されています。
+
 
 
 
