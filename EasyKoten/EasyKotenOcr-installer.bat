@@ -40,9 +40,9 @@ if !PYTHON_INSTALLED! equ 0 (
         exit /b 1
     )
     echo Python 3.10のインストールが完了しました。
-    
     call %~0
     exit /b
+    
 ) else (
     echo Python 3.10 は既にインストールされています。
 )
@@ -60,6 +60,9 @@ if !ERRORLEVEL! neq 0 (
         exit /b 1
     )
     echo Gitのインストールが完了しました。
+    call %~0
+    exit /b
+    
 ) else (
     for /f "delims=" %%A in ('git --version') do echo %%A はインストール済です。
 )
