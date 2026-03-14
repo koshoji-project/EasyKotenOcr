@@ -1,2 +1,2 @@
 call "%~dp0venv\Scripts\activate.bat"
-python main.py infer d:/ocr/in d:/ocr/out -a -s b
+python main.py infer c:/ocr/in c:/ocr/out -a -s b
