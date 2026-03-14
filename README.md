@@ -18,8 +18,8 @@
 ## インストール
 1. [EasyKotenOcr-installer.bat](https://github.com/koshoji-project/EasyKotenOcr/raw/main/EasyKoten/EasyKotenOcr-installer.bat) を右クリックから表示されるメニューの「名前を付けてリンク先を保存」を用いて保存します。このとき、リンクを開いた後に右クリックから保存すると、*.batファイルではなく*.txtファイルになり実行できなくなります。  
 [EasyKotenOcr-installer.zip](https://github.com/koshoji-project/EasyKotenOcr/raw/main/EasyKoten/EasyKotenOcr-installer.zip) BATファイルのダウンロードがうまくいかない場合は、こちらのZIPファイルをダウンロードしてください。ZIPを展開するとBATファイルが入っています。<br>
-2. 保存したBATファイルの上にマウスカーソルを重ねてから右クリックでメニューを表示させ、「管理者として実行」をクリックしてください。インストールが始まります。未インストールのソフトが多い場合は時間を要します。特にVisual Studioは長時間となります。
-3. BATファイルは、下記のソフトウェアが未インストールならインストールします。<br>
+2. 保存したBATファイルの上にマウスカーソルを重ねてから右クリックでメニューを表示させ、「管理者として実行」をクリックしてください。インストールが始まります。
+3. BATファイルは、下記のソフトウェアが未インストールならインストールします。未インストールのソフトが多い場合は時間を要します。特にVisual Studioは長時間となります。<br>
    - Python version 3.10<br>
    - Microsoft Visual Studio C++ Build Tools<br>
    - git<br>
