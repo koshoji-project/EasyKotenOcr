@@ -6,7 +6,7 @@
 
 本プログラムに適用するライセンスは、CC BY 4.0です。ライセンス詳細は[LICENSE](./LICENSE)をご覧ください。
 ## インストール
-このリンク[EasyKotenOcr-installer.zip](https://github.com/koshoji-project/EasyKotenOcr/raw/main/EasyKoten/EasyKotenOcr-installer.zip) からZIPファイルをダウンロードし、ZIPを展開してください。展開されたBATファイルの上にマウスカーソルを重ねてから右クリックでメニューを表示させ、「管理者として実行」をクリックしてください。インストールが始まります。
+[EasyKotenOcr-installer.zip](https://github.com/koshoji-project/EasyKotenOcr/raw/main/EasyKoten/EasyKotenOcr-installer.zip) からZIPファイルをダウンロードし、ZIPを展開してください。展開されたBATファイルの上にマウスカーソルを重ねてから右クリックでメニューを表示させ、「管理者として実行」をクリックしてください。インストールが始まります。
 
 ## 改変の内容
 1. Dockerを用いた仮想化技術を使用せずに、Windows Native 環境上で動作するようにしました。WSLやHyper-Vも不要です。
