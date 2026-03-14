@@ -14,7 +14,30 @@ if !ERRORLEVEL! neq 0 (
     exit /b 1
 )
 
-:: 1. Python 3.10のインストール確認とインストール
+
+:: 1. Gitのインストール確認とインストール
+echo [Gitのインストール確認]
+git --version >nul 2>&1
+if !ERRORLEVEL! neq 0 (
+    echo Gitが未インストール、またはパスが通っていません。wingetでインストールします...
+    winget install --id Git.Git -e --source winget --silent --accept-package-agreements --accept-source-agreements
+    if !ERRORLEVEL! neq 0 (
+        echo [エラー] Gitのインストールに失敗しました。
+        pause
+        exit /b 1
+    )
+    echo Gitのインストールが完了しました。
+    call %~0
+    exit /b
+    
+) else (
+    for /f "delims=" %%A in ('git --version') do echo %%A はインストール済です。
+)
+echo.
+
+
+
+:: 2. Python 3.10のインストール確認とインストール
 echo [Python 3.10のインストール確認]
 set PYTHON_INSTALLED=0
 
@@ -47,27 +70,6 @@ if !PYTHON_INSTALLED! equ 0 (
     echo Python 3.10 は既にインストールされています。
 )
 echo.
-
-:: 2. Gitのインストール確認とインストール
-echo [Gitのインストール確認]
-git --version >nul 2>&1
-if !ERRORLEVEL! neq 0 (
-    echo Gitが未インストール、またはパスが通っていません。wingetでインストールします...
-    winget install --id Git.Git -e --source winget --silent --accept-package-agreements --accept-source-agreements
-    if !ERRORLEVEL! neq 0 (
-        echo [エラー] Gitのインストールに失敗しました。
-        pause
-        exit /b 1
-    )
-    echo Gitのインストールが完了しました。
-    call %~0
-    exit /b
-    
-) else (
-    for /f "delims=" %%A in ('git --version') do echo %%A はインストール済です。
-)
-echo.
-
 
 
 :: 3 Visual Studio Build Tools 2022のインストール
