@@ -5,6 +5,8 @@
 
 
 本プログラムに適用するライセンスは、CC BY 4.0です。ライセンス詳細は[LICENSE](./LICENSE)をご覧ください。
+## インストール
+このリンク[EasyKotenOcr-installer.zip](https://github.com/koshoji-project/EasyKotenOcr/raw/main/EasyKoten/EasyKotenOcr-installer.zip) からZIPファイルをダウンロードし、ZIPを展開してください。展開されたBATファイルの上にマウスカーソルを重ねてから右クリックでメニューを表示させ、「管理者として実行」をクリックしてください。インストールが始まります。
 
 ## 改変の内容
 1. Dockerを用いた仮想化技術を使用せずに、Windows Native 環境上で動作するようにしました。WSLやHyper-Vも不要です。
@@ -14,22 +16,17 @@
 5. OCR実行時のオプションとして文字列認識結果を画像ファイルとして出力する機能を追加しました。
 6. 入出力フォルダーの構成を判りやすくシンプルにしました。
 
-
-## インストール
-1. [EasyKotenOcr-installer.bat](https://github.com/koshoji-project/EasyKotenOcr/raw/main/EasyKoten/EasyKotenOcr-installer.bat) を右クリックから表示されるメニューの「名前を付けてリンク先を保存」を用いて保存します。このとき、リンクを開いた後に右クリックから保存すると、*.batファイルではなく*.txtファイルになり実行できなくなります。  
-[EasyKotenOcr-installer.zip](https://github.com/koshoji-project/EasyKotenOcr/raw/main/EasyKoten/EasyKotenOcr-installer.zip) BATファイルのダウンロードがうまくいかない場合は、こちらのZIPファイルをダウンロードしてください。ZIPを展開するとBATファイルが入っています。<br>
-2. 保存したBATファイルの上にマウスカーソルを重ねてから右クリックでメニューを表示させ、「管理者として実行」をクリックしてください。インストールが始まります。
-3. BATファイルは、下記のソフトウェアが未インストールならインストールします。未インストールのソフトが多い場合は時間を要します。特にVisual Studioは長時間となります。<br>
+## BATファイルが実行する処理の内容
+1. BATファイルは、下記のソフトウェアが未インストールならインストールします。未インストールのソフトが多い場合は時間を要します。特にVisual Studioは長時間となります。<br>
    - Python version 3.10<br>
    - Microsoft Visual Studio C++ Build Tools<br>
    - git<br>
-   
-5. BATファイルは、インストール先のフォルダーを何処にするかユーザーに指示を仰ぎます。既定ではc:\easykotenocrです。
-6. BATファイルは、上記で指示されたフォルダーに本リポジトリのクローンを生成します。
-7. BATファイルは、Python 3.10の仮想環境を構築し、必要なパッケージを仮想環境にインストールします。
-8. BATファイルは、学習済のモデルを国立国会図書館のNDLラボからダウンロードします。   　
+2. BATファイルは、インストール先のフォルダーを何処にするかユーザーに指示を仰ぎます。既定ではc:\easykotenocrです。
+3. BATファイルは、上記で指示されたフォルダーに本リポジトリのクローンを生成します。
+4. BATファイルは、Python 3.10の仮想環境を構築し、必要なパッケージを仮想環境にインストールします。
+5. BATファイルは、学習済のモデルを国立国会図書館のNDLラボからダウンロードします。   　
 
-## 2. OCRの実行
+## OCRの実行
 
 ## 環境構築後のディレクトリ構成（参考）
 ```
