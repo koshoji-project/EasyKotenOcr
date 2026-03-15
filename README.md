@@ -37,7 +37,7 @@ EasyKotenOCR
 ├── EasyKoten : インスト－ラやPythonパッケージに適用する修正パッチの格納されたフォルダー
 ├── src : 各推論処理のソースコード用フォルダー
 │   ├── ndl_kotenseki_layout : レイアウト抽出処理のソースコードの格納されたフォルダー
-|   ├── reading_order：読み順整序処理のソースコードの格納されたフォルダー
+│   ├── reading_order：読み順整序処理のソースコードの格納されたフォルダー
 │   └── text_kotenseki_recognition : 文字認識処理のソースコードの格納されたフォルダー
 ├── venv : Python仮想環境用のフォルダー
 ├── config.yml : サンプルの推論設定ファイル
@@ -54,10 +54,10 @@ EasyKotenOCR
 input_rootフォルダーの直下に画像ファイルがある場合、
 ```
 input_root/  (ユーザー指定)
- ├── page01.jpg
- ├── page02.jpg
+ ├── 岩舩山真名縁起_page01.jpg
+ ├── 岩舩山真名縁起_page02.jpg
  ・・・
- └── page10.jpg
+ └── 岩舩山真名縁起_page07.jpg
 ```
 以下のコマンドで実行することができます。
 ```
@@ -70,13 +70,13 @@ python main.py infer input_root output_dir
 output_dir/  (ユーザー指定)
  └── YYYY-MM-DD_HHMMSS (タイムスタンプ)
       ├── opt.json
-      ├── page01.txt
-      ├── page01.jp
-      ├── page01.json
+      ├── 岩舩山真名縁起_page01.txt
+      ├── 岩舩山真名縁起_page01.jpg
+      ├── 岩舩山真名縁起_page01.json
        ...
-      ├── page10.txt
-      ├── page10.jp
-      └── page10.json
+      ├── 岩舩山真名縁起_page07.txt
+      ├── 岩舩山真名縁起_page07.jpg
+      └── 岩舩山真名縁起_page07.json
  
 ```
 
@@ -97,35 +97,35 @@ python main.py infer input_root output_dir -s b
 入力形式
 ```
 input_root/  (ユーザー指定)
- ├── document1 (文書毎のサブフォルダ名)
- │   ├── page01.jpg
- │   ├── page02.jpg
+ ├── 01_岩舩山縁起絵巻_第一巻 (文書毎のサブフォルダ名)
+ │   ├── 詞書_page01.jpg
+ │   ├── 詞書_page02.jpg
  │   ・・・
- │   └── page10.jpg
- └── document2 (文書毎のサブフォルダ名)
-     ├── page01.jpg
-     ├── page02.jpg
+ │   └── 詞書_page10.jpg
+ └── 02_開帳差免帳_第一巻 (文書毎のサブフォルダ名)
+     ├── 01_延享元年_下野國_岩舩山高勝寺.jpg
+     ├── 02_寛保三年_下野國_醫王寺.jpg
      ・・・
-     └── page10.jpg
+     └── 10_延享元年_勢州_白子山観音寺.jpg
 ```
 出力形式
 ```
 output_root/ (ユーザー指定)
  └── YYYY-MM-DD_HHMMSS (タイムスタンプ)
       ├── opt.json
-      ├── document1 (文書毎のサブフォルダ名)
-      │   ├── page01.txt
-      │   ├── page01.jpg
-      │   ├── page01.json
-      │   ├── page02.txt
-      │   ├── page02.jpg
-      │   ├── page02.json
+      ├── 01_岩舩山縁起絵巻_第一巻 (文書毎のサブフォルダ名)
+      │   ├── 詞書_page01.txt
+      │   ├── 詞書_page01.jpg
+      │   ├── 詞書_page01.json
+      │   ├── 詞書_page02.txt
+      │   ├── 詞書_page02.jpg
+      │   ├── 詞書_page02.json
       │    ...
-      │   ├── page10.txt
-      │   ├── page10.jpg
-      │   └── page10.json
-      └── document2 (文書毎のサブフォルダ名)
-          ├── page01.txt
+      │   ├── 詞書_page10.txt
+      │   ├── 詞書_page10.jpg
+      │   └── 詞書_page10.json
+      └── 02_開帳差免帳_第一冊 (文書毎のサブフォルダ名)
+          ├──  01_延享元年_下野國_岩舩山高勝寺.txt
           └── ...
 
 ```
