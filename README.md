@@ -47,12 +47,11 @@ EasyKotenOCR
 ### 推論処理の実行
 input_rootディレクトリの直下にimgディレクトリがあり、その下に資料毎の画像ディレクトリ(bookid1,bookid2,...)がある場合、
 ```
-input_root/
-  └── img
-      ├── page01.jpg
-      ├── page02.jpg
-      ・・・
-      └── page10.jpg
+input_root/  (ユーザー指定)
+ ├── page01.jpg
+ ├── page02.jpg
+ ・・・
+ └── page10.jpg
 ```
 以下のコマンドで実行することができます。
 ```
@@ -62,18 +61,17 @@ python main.py infer input_root output_dir
 実行後の出力例は次の通りです。
 
 ```
-output_dir/
-  ├── input_root
-  │   ├── txt
-  │   │     ├── page01.txt
-  │   │     ├── page02.txt
-  │   │    ・・・
-  │   │    
-  │   └── json
-  │         ├── page01.json
-  │         ├── page02.json
-  │        ・・・
-  └── opt.json
+output_dir/  (ユーザー指定)
+ └── YYYY-MM-DD_HHMMSS (タイムスタンプ)
+      ├── opt.json
+      ├── page01.txt
+      ├── page01.jp
+      ├── page01.json
+       ...
+      ├── page10.txt
+      ├── page10.jp
+      └── page10.json
+ 
 ```
 
 
@@ -92,44 +90,38 @@ python main.py infer input_root output_dir -s b
 
 入力形式
 ```
-input_root/
-  └── img
-      ├── bookid1
-      │   ├── page01.jpg
-      │   ├── page02.jpg
-      │   ・・・
-      │   └── page10.jpg
-      ├── bookid2
-          ├── page01.jpg
-          ├── page02.jpg
-          ・・・
-          └── page10.jpg
+input_root/  (ユーザー指定)
+ ├── document1 (入力元の各文書フォルダ名)
+ │   ├── page01.jpg
+ │   ├── page02.jpg
+ │   ・・・
+ │   └── page10.jpg
+ └── document2 (入力元の各文書フォルダ名)
+     ├── page01.jpg
+     ├── page02.jpg
+     ・・・
+     └── page10.jpg
 ```
 出力形式
 ```
-output_dir/
-  ├── input_root
-  |     ├──bookid1
-  │     |     ├── txt
-  │     |     │     ├── page01.txt
-  │     |     │     ├── page02.txt
-  │     |     │         ・・・
-  │     |     │    
-  │     |     └── json
-  │     |           ├── page01.json
-  │     |           ├── page02.json
-  │     |               ・・・
-  |     ├──bookid2
-  │     |     ├── txt
-  │     |     │     ├── page01.txt
-  │     |     │     ├── page02.txt
-  │     |     │         ・・・
-  │     |     │    
-  │     |     └── json
-  │     |           ├── page01.json
-  │     |           ├── page02.json
-  │                    ・・・
-  └── opt.json
+output_root/ (ユーザー指定)
+ └── YYYY-MM-DD_HHMMSS (タイムスタンプ)
+      ├── opt.json
+      ├── document1 (入力元の各文書フォルダ名)
+      │   ├── page01.txt
+      │   ├── page01.jpg
+      │   ├── page01.json
+      │   ├── page02.txt
+      │   ├── page02.jpg
+      │   ├── page02.json
+      │    ...
+      │   ├── page10.txt
+      │   ├── page10.jpg
+      │   └── page10.json
+      └── document2 (入力元の各文書フォルダ名)
+          ├── page01.txt
+          └── ...
+
 ```
 
 #### 画像サイズ出力オプション
@@ -157,27 +149,8 @@ python main.py infer input_root output_dir -a
 }
 ```
 
-
-
 #### オプション情報の保存
 出力ディレクトリでは、実行時に指定したオプション情報が`opt.json`に保存されています。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
