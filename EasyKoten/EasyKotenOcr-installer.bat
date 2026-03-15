@@ -227,6 +227,30 @@ popd
 echo モデルのダウンロードが完了しました。
 echo.
 
+:: 10. Pythonパッケージの修正パッチ適用
+echo [Pythonパッケージの修正パッチ適用]
+echo 修正パッチを適用しています...
+pushd "!INSTALL_DIR!"
+xcopy EasyKoten\fix_packages\fcn_mask_head.py venv\lib\site-packages\mmdet\models\roi_heads\mask_heads\ /y /q
+if !ERRORLEVEL! neq 0 (
+    echo [エラー] 修正パッチの適用に失敗しました。
+    popd
+    pause
+    exit /b 1
+)
+xcopy EasyKoten\fix_packages\utils.py venv\lib\site-packages\transformers\generation\ /y /q
+if !ERRORLEVEL! neq 0 (
+    echo [エラー] 修正パッチの適用に失敗しました。
+    popd
+    pause
+    exit /b 1
+)
+popd
+echo 修正パッチの適用が完了しました。
+echo.
+
+
+
 echo ==========================================
 echo EasyKotenOCR のインストールと初期設定がすべて完了しました！
 echo （起動の準備が整いました）
