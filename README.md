@@ -61,7 +61,7 @@ input_root/  (ユーザー指定)
 ```
 以下のコマンドで実行することができます。
 ```
-python main.py infer input_root output_dir
+python main.py infer input_root output_dir -a
 ```
 
 実行後の出力例は次の通りです。
@@ -91,7 +91,7 @@ output_dir/  (ユーザー指定)
 
 例：
 ```
-python main.py infer input_root output_dir -s b
+python main.py infer input_root output_dir -s b -a
 ```
 
 入力形式
