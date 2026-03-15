@@ -31,15 +31,19 @@
 ## 環境構築後のディレクトリ構成（参考）
 ```
 EasyKotenOCR
-├── main.py : メインとなるPythonスクリプト
 ├── cli : CLIコマンド的に利用するPythonスクリプトの格納されたディレクトリ
+├── EasyKoten : インスト－ラやPythonパッケージに適用する修正パッチの格納されたディレクトリ
 ├── src : 各推論処理のソースコード用ディレクトリ
 │   ├── ndl_kotenseki_layout : レイアウト抽出処理のソースコードの格納されたディレクトリ
 |   ├── reading_order：読み順整序処理のソースコードの格納されたディレクトリ
 │   └── text_kotenseki_recognition : 文字認識処理のソースコードの格納されたディレクトリ
+├── venv : Python仮想環境用のディレクトリ
 ├── config.yml : サンプルの推論設定ファイル
+├── LICENSE : CC 4.0のライセンスファイル
+├── main.py : メインとなるPythonスクリプト
 ├── README.md : このファイル
-└── requirements-windows.txt : 必要なPythonパッケージリスト
+├── requirements-windows.txt : 必要なPythonパッケージリスト
+└── start_ocr.bat : main.pyを起動するためのバッチファイル
 ```
 
 
