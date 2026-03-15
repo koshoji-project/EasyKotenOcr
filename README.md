@@ -30,16 +30,16 @@
 EasyKotenOcrのフォルダーの中にあるstart_ocr.batをクリックして実行してください。
 入力フォルダにはc:\ocr\in、出力フォルダにはc:\ocr\out、実行時オプションは -s b -a が指定されています。必要に応じて書き換えてください。
 
-## 環境構築後のディレクトリ構成（参考）
+## 環境構築後のフォルダー構成（参考）
 ```
 EasyKotenOCR
-├── cli : CLIコマンド的に利用するPythonスクリプトの格納されたディレクトリ
-├── EasyKoten : インスト－ラやPythonパッケージに適用する修正パッチの格納されたディレクトリ
-├── src : 各推論処理のソースコード用ディレクトリ
-│   ├── ndl_kotenseki_layout : レイアウト抽出処理のソースコードの格納されたディレクトリ
-|   ├── reading_order：読み順整序処理のソースコードの格納されたディレクトリ
-│   └── text_kotenseki_recognition : 文字認識処理のソースコードの格納されたディレクトリ
-├── venv : Python仮想環境用のディレクトリ
+├── cli : CLIコマンド的に利用するPythonスクリプトの格納されたフォルダー
+├── EasyKoten : インスト－ラやPythonパッケージに適用する修正パッチの格納されたフォルダー
+├── src : 各推論処理のソースコード用フォルダー
+│   ├── ndl_kotenseki_layout : レイアウト抽出処理のソースコードの格納されたフォルダー
+|   ├── reading_order：読み順整序処理のソースコードの格納されたフォルダー
+│   └── text_kotenseki_recognition : 文字認識処理のソースコードの格納されたフォルダー
+├── venv : Python仮想環境用のフォルダー
 ├── config.yml : サンプルの推論設定ファイル
 ├── LICENSE : CC 4.0のライセンスファイル
 ├── main.py : メインとなるPythonスクリプト
@@ -51,7 +51,7 @@ EasyKotenOCR
 
 
 ### 推論処理の実行
-input_rootディレクトリの直下に画像ファイルがある場合、
+input_rootフォルダーの直下に画像ファイルがある場合、
 ```
 input_root/  (ユーザー指定)
  ├── page01.jpg
@@ -149,14 +149,14 @@ python main.py infer input_root output_dir -a
   "imginfo": {
     "img_width": (元画像の幅),
     "img_height": (元画像の高さ),
-    "img_path":（元画像のディレクトリパス）,
+    "img_path":（元画像のフォルダーパス）,
     "img_name":（元画像名）
   }
 }
 ```
 
 #### オプション情報の保存
-出力ディレクトリでは、実行時に指定したオプション情報が`opt.json`に保存されています。
+出力フォルダーでは、実行時に指定したオプション情報が`opt.json`に保存されています。
 
 
 
