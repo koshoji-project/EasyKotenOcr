@@ -20,7 +20,7 @@
 1. 下記のソフトウェアが未インストールならインストールします。未インストールのソフトが多い場合は時間を要します。特にVisual Studioは長時間となります。<br>
    - git<br>
    - Python version 3.10<br>
-   - Microsoft Visual Studio C++ Build Tools<br>
+   - Microsoft Visual Studio C++ Build Tools 2022<br>
 2. インストール先のフォルダーを何処にするかユーザーに指示を仰ぎます。既定ではc:\easykotenocrです。
 3. 上記で指示されたフォルダーに本リポジトリのクローンを生成します。
 4. pip + venvを用いてPython 3.10の仮想環境を構築し、必要なパッケージを仮想環境にインストールします。
