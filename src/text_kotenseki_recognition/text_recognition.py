@@ -58,7 +58,9 @@ class TextRecognizer:
             try:
                 generated_ids = self.ocrmodel.generate(
                     self.ocrprocessor(imageslist[step*self.batchsize:(step+1)*self.batchsize],
-                                      return_tensors="pt").pixel_values.to(self.device, torch.float))
+                                      return_tensors="pt").pixel_values.to(self.device, torch.float),
+                    max_new_tokens=100
+                )
                 restextlist = self.ocrtokenizer.batch_decode(generated_ids, skip_special_tokens=True)
                 for rect, restext in zip(coordslist[step*self.batchsize:(step+1)*self.batchsize], restextlist):
                     xmin, ymin, xmax, ymax = rect
