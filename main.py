@@ -66,8 +66,10 @@ def infer(ctx, input_root, output_root, config_file,input_structure, add_info):
         print('[ERROR] Config parse error :{0}'.format(input_root), file=sys.stderr)
         sys.exit(1)
 
-    # prepare output root derectory
-    infer_cfg['output_root'] = utils.mkdir_with_duplication_check(infer_cfg['output_root'])
+    import datetime
+    now_str = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
+    infer_cfg['output_root'] = os.path.join(infer_cfg['output_root'], now_str)
+    os.makedirs(infer_cfg['output_root'], exist_ok=True)
 
     # save inference option
     with open(os.path.join(infer_cfg['output_root'], 'opt.json'), 'w') as fp:
