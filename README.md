@@ -45,7 +45,7 @@ EasyKotenOCR
 
 
 ### 推論処理の実行
-input_rootディレクトリの直下にimgディレクトリがあり、その下に資料毎の画像ディレクトリ(bookid1,bookid2,...)がある場合、
+input_rootディレクトリの直下に画像ファイルがある場合、
 ```
 input_root/  (ユーザー指定)
  ├── page01.jpg
@@ -91,12 +91,12 @@ python main.py infer input_root output_dir -s b
 入力形式
 ```
 input_root/  (ユーザー指定)
- ├── document1 (入力元の各文書フォルダ名)
+ ├── document1 (文書毎のサブフォルダ名)
  │   ├── page01.jpg
  │   ├── page02.jpg
  │   ・・・
  │   └── page10.jpg
- └── document2 (入力元の各文書フォルダ名)
+ └── document2 (文書毎のサブフォルダ名)
      ├── page01.jpg
      ├── page02.jpg
      ・・・
@@ -107,7 +107,7 @@ input_root/  (ユーザー指定)
 output_root/ (ユーザー指定)
  └── YYYY-MM-DD_HHMMSS (タイムスタンプ)
       ├── opt.json
-      ├── document1 (入力元の各文書フォルダ名)
+      ├── document1 (文書毎のサブフォルダ名)
       │   ├── page01.txt
       │   ├── page01.jpg
       │   ├── page01.json
@@ -118,7 +118,7 @@ output_root/ (ユーザー指定)
       │   ├── page10.txt
       │   ├── page10.jpg
       │   └── page10.json
-      └── document2 (入力元の各文書フォルダ名)
+      └── document2 (文書毎のサブフォルダ名)
           ├── page01.txt
           └── ...
 
