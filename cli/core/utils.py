@@ -60,8 +60,8 @@ def parse_cfg(cfg_dict):
         #      └── R[7桁連番]_pp.jp2※画像データ
 
         # validation check for input dir structure
-        if not os.path.isdir(os.path.join(infer_cfg['input_root'], 'img')):
-            print('[ERROR] Input img diretctory not found in {}'.format(infer_cfg['input_root']), file=sys.stderr)
+        if not os.path.isdir(infer_cfg['input_root']):
+            print('[ERROR] Input directory not found: {}'.format(infer_cfg['input_root']), file=sys.stderr)
             return None
         infer_cfg['input_dirs'] = [infer_cfg['input_root']]
     elif infer_cfg['input_structure'] in ['f']:
@@ -87,8 +87,8 @@ def parse_cfg(cfg_dict):
         #             └── page10.jpg
 
         # validation check for input dir structure
-        if not os.path.isdir(os.path.join(infer_cfg['input_root'], 'img')):
-            print('[ERROR] Input img diretctory not found in {}'.format(infer_cfg['input_root']), file=sys.stderr)
+        if not os.path.isdir(infer_cfg['input_root']):
+            print('[ERROR] Input directory not found: {}'.format(infer_cfg['input_root']), file=sys.stderr)
             return None
         infer_cfg['input_dirs'] = [infer_cfg['input_root']]
     else:

@@ -189,21 +189,25 @@ class OcrInferencer:
                 single_dir_data['img_list'] = [input_dir]
             else:
                 print('[ERROR] This file is not supported type : {0}'.format(input_dir), file=sys.stderr)
-        elif not os.path.isdir(os.path.join(input_dir, 'img')):
-            print('[ERROR] Input img diretctory not found in {}'.format(input_dir), file=sys.stderr)
+        elif not os.path.isdir(input_dir):
+            print('[ERROR] Input directory not found: {}'.format(input_dir), file=sys.stderr)
             return None
         elif self.cfg['input_structure'] in ['b']:
             for ext in supported_img_ext:
-                single_dir_data['img_list'].extend(sorted(glob.glob(os.path.join(input_dir, 'img/*/*{0}'.format(ext)))))
+                single_dir_data['img_list'].extend(sorted(glob.glob(os.path.join(input_dir, '*/*{0}'.format(ext)))))
         else:
             for ext in supported_img_ext:
-                single_dir_data['img_list'].extend(sorted(glob.glob(os.path.join(input_dir, 'img/*{0}'.format(ext)))))
+                single_dir_data['img_list'].extend(sorted(glob.glob(os.path.join(input_dir, '*{0}'.format(ext)))))
 
         # prepare output dir for inferensce result with this input dir
         if self.cfg['input_structure'] in ['f']:
             stem, ext = os.path.splitext(os.path.basename(input_dir))
             output_dir = os.path.join(self.cfg['output_root'], stem)
-        elif self.cfg['input_structure'] in ['i', 's', 'b']:
+        elif self.cfg['input_structure'] in ['b']:
+            # For book mode, output_root already has the timestamp subfolder.
+            # Document subfolders are created in _infer() per image.
+            output_dir = self.cfg['output_root']
+        elif self.cfg['input_structure'] in ['i', 's']:
             dir_name = os.path.basename(input_dir)
             output_dir = os.path.join(self.cfg['output_root'], dir_name)
         else:
@@ -211,7 +215,7 @@ class OcrInferencer:
             return None
 
         # output directory existance check
-        output_dir = utils.mkdir_with_duplication_check(output_dir)
+        os.makedirs(output_dir, exist_ok=True)
         single_dir_data['output_dir'] = output_dir
 
         return [single_dir_data]
@@ -340,10 +344,8 @@ class OcrInferencer:
             1ページ分の推論結果を要素に持つ推論結果のリスト。
             各結果は辞書型で保持されています。
         """
-        json_dir = os.path.join(output_dir, 'json')
-        os.makedirs(json_dir, exist_ok=True)
         stem, _ = os.path.splitext(orig_img_name)
-        json_path = os.path.join(json_dir, '{}.json'.format(stem))
+        json_path = os.path.join(output_dir, '{}.json'.format(stem))
         try:
             with open(json_path, 'w') as wf:
                 json.dump(pred_list, wf, indent=2, ensure_ascii=False )
@@ -402,11 +404,8 @@ class OcrInferencer:
         img_output_dir : str
             画像ファイルの保存先のディレクトリパス。
         """
-        txt_dir = os.path.join(output_dir, 'txt')
-        os.makedirs(txt_dir, exist_ok=True)
-
         stem, _ = os.path.splitext(orig_img_name)
-        txt_path = os.path.join(txt_dir, stem + '_main.txt')
+        txt_path = os.path.join(output_dir, stem + '.txt')
         try:
             with open(txt_path, 'w') as f:
                 f.write(main_txt)
@@ -430,16 +429,13 @@ class OcrInferencer:
         pred_json : list
             認識結果の座標情報を含むリスト。
         """
-        json_dir = os.path.join(output_dir, 'json')
-        os.makedirs(json_dir, exist_ok=True)
-        
         img_recog = img.copy()
         for box in pred_json:
             # box : [xmin, ymin, xmax, ymax, text]
             cv2.rectangle(img_recog, (int(box[0]), int(box[1])), (int(box[2]), int(box[3])), (255, 0, 0), 3)
             
-        stem, ext = os.path.splitext(orig_img_name)
-        save_path = os.path.join(json_dir, stem + '_recog' + ext)
+        stem, _ = os.path.splitext(orig_img_name)
+        save_path = os.path.join(output_dir, stem + '.jpg')
         try:
             cv2.imwrite(save_path, img_recog)
         except OSError as err:
