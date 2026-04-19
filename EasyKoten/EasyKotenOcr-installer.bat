@@ -36,7 +36,7 @@ echo インストーラをダウンロードしています...
 echo.
 
 set BT_INSTALLER=vs_buildtools.exe
-powershell -Command "$Env:BT_INSTALLER; Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vs_buildtools.exe -OutFile vs_buildtools.exe"
+powershell -Command "$Env:BT_INSTALLER; Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vs_buildtools.exe -OutFile '%BT_INSTALLER%'"
 
 if not exist %BT_INSTALLER% (
     echo インストーラのダウンロードに失敗しました。
