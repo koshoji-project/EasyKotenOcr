@@ -2,22 +2,22 @@
 setlocal
 
 :: =============================================================
-::  Build Tools for Visual Studio 2022 ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ç¢ºèª
+::  Build Tools for Visual Studio 2022 ƒCƒ“ƒXƒg[ƒ‹Šm”F
 :: =============================================================
 echo ============================================================
-echo   Build Tools for Visual Studio 2022 ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ç¢ºèª
+echo   Build Tools for Visual Studio 2022 ƒCƒ“ƒXƒg[ƒ‹Šm”F
 echo ============================================================
 echo.
 
-:: ãƒ¬ã‚¸ã‚¹ãƒˆãƒªã§ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«æ¸ˆã¿ã‹ç¢ºèª
-:: VS2022 Build Tools ã¯ä»¥ä¸‹ã®ã‚­ãƒ¼ã«ç™»éŒ²ã•ã‚Œã‚‹
+:: ƒŒƒWƒXƒgƒŠ‚ÅƒCƒ“ƒXƒg[ƒ‹Ï‚Ý‚©Šm”F
+:: VS2022 Build Tools ‚ÍˆÈ‰º‚ÌƒL[‚É“o˜^‚³‚ê‚é
 reg query "HKLM\SOFTWARE\Microsoft\VisualStudio\2022" /v "15.0" >nul 2>&1
 if %ERRORLEVEL%==0 goto BUILDTOOLS_FOUND
 
 reg query "HKLM\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\2022" >nul 2>&1
 if %ERRORLEVEL%==0 goto BUILDTOOLS_FOUND
 
-:: Visual Studio Installer çµŒç”±ã®ã‚¨ãƒ³ãƒˆãƒªã‚’ç¢ºèª
+:: Visual Studio Installer Œo—R‚ÌƒGƒ“ƒgƒŠ‚ðŠm”F
 reg query "HKLM\SOFTWARE\Microsoft\VisualStudio\Setup" >nul 2>&1
 if %ERRORLEVEL%==0 (
     reg query "HKLM\SOFTWARE\Microsoft\VisualStudio\Setup" /s /f "BuildTools" >nul 2>&1
@@ -30,83 +30,83 @@ if %ERRORLEVEL%==0 (
     if %ERRORLEVEL%==0 goto BUILDTOOLS_FOUND
 )
 
-:: ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ãªã„å ´åˆ â†’ ã‚µã‚¤ãƒ¬ãƒ³ãƒˆã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
-echo Build Tools for Visual Studio 2022 ãŒã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚
-echo ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ©ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ã¦ã„ã¾ã™...
+:: ƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚È‚¢ê‡ ¨ ƒTƒCƒŒƒ“ƒgƒCƒ“ƒXƒg[ƒ‹
+echo Build Tools for Visual Studio 2022 ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB
+echo ƒCƒ“ƒXƒg[ƒ‰‚ðƒ_ƒEƒ“ƒ[ƒh‚µ‚Ä‚¢‚Ü‚·...
 echo.
 
 set BT_INSTALLER=vs_buildtools.exe
 powershell -Command "$Env:BT_INSTALLER; Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vs_buildtools.exe -OutFile vs_buildtools.exe"
 
 if not exist %BT_INSTALLER% (
-    echo ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ©ã®ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸã€‚
-    echo å‡¦ç†ã‚’ä¸­æ–­ã—ã¾ã™ã€‚
+    echo ƒCƒ“ƒXƒg[ƒ‰‚Ìƒ_ƒEƒ“ƒ[ƒh‚ÉŽ¸”s‚µ‚Ü‚µ‚½B
+    echo ˆ—‚ð’†’f‚µ‚Ü‚·B
     goto END
 )
 
-echo Build Tools for Visual Studio 2022 ã‚’ã‚µã‚¤ãƒ¬ãƒ³ãƒˆã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ä¸­...
-echo ï¼ˆå®Œäº†ã¾ã§æ•°åˆ†ã‹ã‹ã‚‹å ´åˆãŒã‚ã‚Šã¾ã™ï¼‰
+echo Build Tools for Visual Studio 2022 ‚ðƒTƒCƒŒƒ“ƒgƒCƒ“ƒXƒg[ƒ‹’†...
+echo iŠ®—¹‚Ü‚Å”•ª‚©‚©‚éê‡‚ª‚ ‚è‚Ü‚·j
 %BT_INSTALLER% --quiet --wait --norestart ^
     --add Microsoft.VisualStudio.Workload.VCTools ^
     --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 ^
     --add Microsoft.VisualStudio.Component.Windows11SDK.22621
 
 if %ERRORLEVEL%==0 (
-    echo Build Tools for Visual Studio 2022 ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ãŒå®Œäº†ã—ã¾ã—ãŸã€‚
+    echo Build Tools for Visual Studio 2022 ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ªŠ®—¹‚µ‚Ü‚µ‚½B
 ) else (
-    echo Build Tools for Visual Studio 2022 ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã«å¤±æ•—ã—ã¾ã—ãŸã€‚ï¼ˆçµ‚äº†ã‚³ãƒ¼ãƒ‰: %ERRORLEVEL%ï¼‰
-    echo å‡¦ç†ã‚’ä¸­æ–­ã—ã¾ã™ã€‚
+    echo Build Tools for Visual Studio 2022 ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ÉŽ¸”s‚µ‚Ü‚µ‚½BiI—¹ƒR[ƒh: %ERRORLEVEL%j
+    echo ˆ—‚ð’†’f‚µ‚Ü‚·B
     goto END
 )
 goto BUILDTOOLS_DONE
 
 :BUILDTOOLS_FOUND
-echo Build Tools for Visual Studio 2022 ã¯æ—¢ã«ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã™ã€‚
+echo Build Tools for Visual Studio 2022 ‚ÍŠù‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚Ü‚·B
 
 :BUILDTOOLS_DONE
 echo.
 
 
 echo ================================
-echo   Git ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ç¢ºèªãƒ„ãƒ¼ãƒ«
+echo   Git ƒCƒ“ƒXƒg[ƒ‹Šm”Fƒc[ƒ‹
 echo ================================
 echo.
 
-:: Git ãŒã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèª
+:: Git ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚é‚©Šm”F
 git --version >nul 2>&1
 if %ERRORLEVEL%==0 (
-    echo Git ã¯æ—¢ã«ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã™ã€‚
+    echo Git ‚ÍŠù‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚Ü‚·B
     git --version
     goto PYTHON
 )
 
-echo Git ãŒã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚
-echo Git ã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ã¾ã™...
+echo Git ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB
+echo Git ‚ðƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·...
 echo.
 
-:: Git for Windows ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ©ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰
+:: Git for Windows ‚ÌƒCƒ“ƒXƒg[ƒ‰‚ðƒ_ƒEƒ“ƒ[ƒh
 set GIT_INSTALLER=Git-latest-64-bit.exe
 powershell -Command "Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/latest/download/Git-2.45.2-64-bit.exe -OutFile Git-latest-64-bit.exe"
 
 if not exist %GIT_INSTALLER% (
-    echo ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ©ã®ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸã€‚
+    echo ƒCƒ“ƒXƒg[ƒ‰‚Ìƒ_ƒEƒ“ƒ[ƒh‚ÉŽ¸”s‚µ‚Ü‚µ‚½B
     goto END
 )
 
-:: ã‚µã‚¤ãƒ¬ãƒ³ãƒˆã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
-echo Git ã‚’ã‚µã‚¤ãƒ¬ãƒ³ãƒˆã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ä¸­...
+:: ƒTƒCƒŒƒ“ƒgƒCƒ“ƒXƒg[ƒ‹
+echo Git ‚ðƒTƒCƒŒƒ“ƒgƒCƒ“ƒXƒg[ƒ‹’†...
 %GIT_INSTALLER% /VERYSILENT /NORESTART
 
-echo ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«å®Œäº†ã‚’ç¢ºèªã—ã¦ã„ã¾ã™...
+echo ƒCƒ“ƒXƒg[ƒ‹Š®—¹‚ðŠm”F‚µ‚Ä‚¢‚Ü‚·...
 timeout /t 5 >nul
 
-:: å†ç¢ºèª
+:: ÄŠm”F
 git --version >nul 2>&1
 if %ERRORLEVEL%==0 (
-    echo Git ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ãŒæ­£å¸¸ã«å®Œäº†ã—ã¾ã—ãŸã€‚
+    echo Git ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ª³í‚ÉŠ®—¹‚µ‚Ü‚µ‚½B
     git --version
 ) else (
-    echo Git ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã«å¤±æ•—ã—ã¾ã—ãŸã€‚
+    echo Git ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ÉŽ¸”s‚µ‚Ü‚µ‚½B
 )
 
 
@@ -114,47 +114,47 @@ if %ERRORLEVEL%==0 (
 :PYTHON
 
 echo ==========================================
-echo     Python 3.10 ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ç¢ºèªãƒ„ãƒ¼ãƒ«
+echo     Python 3.10 ƒCƒ“ƒXƒg[ƒ‹Šm”Fƒc[ƒ‹
 echo ==========================================
 echo.
 
-:: Python 3.10 ãŒã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèª
+:: Python 3.10 ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚é‚©Šm”F
 python --version 2>nul | findstr "3.10" >nul
 if %ERRORLEVEL%==0 (
-    echo Python 3.10 ã¯æ—¢ã«ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã™ã€‚
+    echo Python 3.10 ‚ÍŠù‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚Ü‚·B
     python --version
     goto CLONE
 )
 
-echo Python 3.10 ãŒã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚
-echo Python 3.10 ã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ã¾ã™...
+echo Python 3.10 ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB
+echo Python 3.10 ‚ðƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·...
 echo.
 
-:: ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ©ã®ãƒ•ã‚¡ã‚¤ãƒ«å
+:: ƒCƒ“ƒXƒg[ƒ‰‚Ìƒtƒ@ƒCƒ‹–¼
 set PY_INSTALLER=python-3.10.11-amd64.exe
 
-:: Python 3.10.11 ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ©ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰
+:: Python 3.10.11 ƒCƒ“ƒXƒg[ƒ‰‚ðƒ_ƒEƒ“ƒ[ƒh
 powershell -Command "Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe -OutFile python-3.10.11-amd64.exe"
 
 if not exist %PY_INSTALLER% (
-    echo ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ©ã®ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸã€‚
+    echo ƒCƒ“ƒXƒg[ƒ‰‚Ìƒ_ƒEƒ“ƒ[ƒh‚ÉŽ¸”s‚µ‚Ü‚µ‚½B
     goto END
 )
 
-:: ã‚µã‚¤ãƒ¬ãƒ³ãƒˆã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
-echo Python 3.10 ã‚’ã‚µã‚¤ãƒ¬ãƒ³ãƒˆã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ä¸­...
+:: ƒTƒCƒŒƒ“ƒgƒCƒ“ƒXƒg[ƒ‹
+echo Python 3.10 ‚ðƒTƒCƒŒƒ“ƒgƒCƒ“ƒXƒg[ƒ‹’†...
 %PY_INSTALLER% /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
 
-echo ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«å®Œäº†ã‚’ç¢ºèªã—ã¦ã„ã¾ã™...
+echo ƒCƒ“ƒXƒg[ƒ‹Š®—¹‚ðŠm”F‚µ‚Ä‚¢‚Ü‚·...
 timeout /t 5 >nul
 
-:: å†ç¢ºèª
+:: ÄŠm”F
 python --version 2>nul | findstr "3.10" >nul
 if %ERRORLEVEL%==0 (
-    echo Python 3.10 ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ãŒæ­£å¸¸ã«å®Œäº†ã—ã¾ã—ãŸã€‚
+    echo Python 3.10 ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ª³í‚ÉŠ®—¹‚µ‚Ü‚µ‚½B
     python --version
 ) else (
-    echo Python 3.10 ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã«å¤±æ•—ã—ã¾ã—ãŸã€‚
+    echo Python 3.10 ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ÉŽ¸”s‚µ‚Ü‚µ‚½B
 )
 
 :: -----------------
@@ -182,7 +182,7 @@ python EasyKoten\download_models.py
 
 :END
 echo.
-echo å‡¦ç†ãŒå®Œäº†ã—ã¾ã—ãŸã€‚
+echo ˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½B
 pause
 endlocal
 
