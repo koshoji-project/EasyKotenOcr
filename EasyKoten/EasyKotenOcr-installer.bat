@@ -86,7 +86,34 @@ echo.
 
 :: Git for Windows のインストーラをダウンロード
 set GIT_INSTALLER=Git-latest-64-bit.exe
-powershell -Command "Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/latest/download/Git-2.45.2-64-bit.exe -OutFile Git-latest-64-bit.exe"
+
+
+echo 最新版 Git for Windows を確認中...
+
+:: PowerShellで最新リリース情報取得
+for /f "delims=" %%i in ('powershell -NoProfile -Command ^
+  "(Invoke-RestMethod https://api.github.com/repos/git-for-windows/git/releases/latest).assets | Where-Object {$_.name -like '*64-bit.exe'} | Select-Object -First 1 -ExpandProperty browser_download_url"') do set DOWNLOAD_URL=%%i
+
+if "%DOWNLOAD_URL%"=="" (
+    echo ダウンロードURLの取得に失敗しました
+    pause
+    exit /b
+)
+
+echo ダウンロードURL:
+echo %DOWNLOAD_URL%
+
+
+echo ダウンロード中...
+
+powershell -NoProfile -Command ^
+  "Invoke-WebRequest -Uri '%DOWNLOAD_URL%' -OutFile '%GIT_INSTALLER%'"
+
+if exist "%GIT_INSTALLER%" (
+    echo ダウンロード完了: %GIT_INSTALLER%
+) else (
+    echo ダウンロード失敗
+)
 
 if not exist %GIT_INSTALLER% (
     echo インストーラのダウンロードに失敗しました。
@@ -134,7 +161,7 @@ echo.
 set PY_INSTALLER=python-3.10.11-amd64.exe
 
 :: Python 3.10.11 インストーラをダウンロード
-powershell -Command "Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe -OutFile python-3.10.11-amd64.exe"
+powershell -Command "Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe -OutFile '%PY_INSTALLER%'"
 
 if not exist %PY_INSTALLER% (
     echo インストーラのダウンロードに失敗しました。
