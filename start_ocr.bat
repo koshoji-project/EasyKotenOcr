@@ -1,2 +1,5 @@
-call "%~dp0venv\Scripts\activate.bat"
-python main.py infer c:/ocr/in c:/ocr/out -a -s b
+@echo off
+chcp 65001
+cd /D "C:\EasyKotenOcr"
+uv run main.py infer c:/ocr/in c:/ocr/out -a -s b
+pause
