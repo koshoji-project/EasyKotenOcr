@@ -34,7 +34,7 @@ def parse_cfg(cfg_dict):
         print('[ERROR] Config yml file not found.', file=sys.stderr)
         return None
 
-    with open(cfg_dict['config_file'], 'r') as yml:
+    with open(cfg_dict['config_file'], 'r', encoding='utf-8') as yml:
         yml_config = yaml.safe_load(yml)
 
     if type(yml_config) is not dict:

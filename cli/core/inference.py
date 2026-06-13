@@ -347,7 +347,7 @@ class OcrInferencer:
         stem, _ = os.path.splitext(orig_img_name)
         json_path = os.path.join(output_dir, '{}.json'.format(stem))
         try:
-            with open(json_path, 'w') as wf:
+            with open(json_path, 'w', encoding='utf-8') as wf:
                 json.dump(pred_list, wf, indent=2, ensure_ascii=False )
         except OSError as err:
             print("[ERROR] Main text save error: {0}".format(err), file=sys.stderr)
@@ -407,7 +407,7 @@ class OcrInferencer:
         stem, _ = os.path.splitext(orig_img_name)
         txt_path = os.path.join(output_dir, stem + '.txt')
         try:
-            with open(txt_path, 'w') as f:
+            with open(txt_path, 'w', encoding='utf-8') as f:
                 f.write(main_txt)
         except OSError as err:
             print("[ERROR] Main text save error: {0}".format(err), file=sys.stderr)
