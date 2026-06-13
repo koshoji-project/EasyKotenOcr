@@ -240,7 +240,7 @@ class BaseInferenceProcess:
         trum, _ = os.path.splitext(img_name)
         txt_path = os.path.join(txt_dir, trum + '_main.txt')
         try:
-            with open(txt_path, 'w') as f:
+            with open(txt_path, 'w', encoding='utf-8') as f:
                 f.write(single_result['txt'])
         except OSError as err:
             print("Dump text save error: {0}".format(err))
