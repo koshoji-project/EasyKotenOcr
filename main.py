@@ -72,7 +72,7 @@ def infer(ctx, input_root, output_root, config_file,input_structure, add_info):
     os.makedirs(infer_cfg['output_root'], exist_ok=True)
 
     # save inference option
-    with open(os.path.join(infer_cfg['output_root'], 'opt.json'), 'w') as fp:
+    with open(os.path.join(infer_cfg['output_root'], 'opt.json'), 'w', encoding='utf-8') as fp:
         json.dump(infer_cfg, fp, ensure_ascii=False, indent=4,
                   sort_keys=True, separators=(',', ': '))
     # do inference
