@@ -18,6 +18,9 @@ uv pip install mmcv==2.1.0 -f https://download.openmmlab.com/mmcv/dist/cpu/torch
 uv run EasyKoten\download_models.py
 copy /Y /V .\EasyKoten\fix_packages\fcn_mask_head.py .\.venv\lib\site-packages\mmdet\models\roi_heads\mask_heads\
 copy /Y /V .\EasyKoten\fix_packages\utils.py .\.venv\lib\site-packages\transformers\generation\
+echo ============================================
+echo  EasyKotenOCRのインストールが完了しました
+echo ============================================
 pause
 endlocal
 :END
