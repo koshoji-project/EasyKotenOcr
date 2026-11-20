@@ -45,4 +45,7 @@ time.txt
 
 # 注意:
 #  - 既に追跡済みのファイルは .gitignore では無効にならない。消すなら git rm --cached。
-#  - EasyKoten/EasyKotenOcr-installer.zip は過去から追跡されている（意図的か要確認）。
+#  - EasyKoten/EasyKotenOcr-installer.zip は 2026-11-21 に git rm 済み（旧配布物）。
+
+# 旧配布インストーラー zip（2026-11-21 削除。再追加しないこと）
+EasyKoten/*.zip

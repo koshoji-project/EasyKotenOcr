@@ -453,7 +453,7 @@ time.txt
 - 適用は `git check-ignore -v` で確認済み（`__pycache__/x.pyc`、`build/...`、`wheels/**/*.whl`、
   `attic/...`、`src/**/*.pth` がそれぞれ該当ルールで除外される）
 - **既に追跡されているファイルは .gitignore では消えない**。`__pycache__` の 19 本は `git rm --cached` で解除した
-- `EasyKoten/EasyKotenOcr-installer.zip` は過去から**追跡されたまま**（意図的か要確認）
+- `EasyKoten/EasyKotenOcr-installer.zip` は 2026-11-21 に削除済み（旧 Python 3.10 インストーラー。ユーザー指示）
 - `mmcv/` を追加済み（§8.1 の決定により、入れ子 git は git 管理しない）
 
 ## appendix B. N1X で用意しておくもの（チェックリスト）
