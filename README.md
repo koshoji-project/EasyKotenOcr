@@ -6,46 +6,135 @@
 
 本プログラムに適用するライセンスは、CC BY 4.0です。ライセンス詳細は[LICENSE](./LICENSE)をご覧ください。
 ## インストール
-[EasyKotenOcr-installer.zip](https://github.com/koshoji-project/EasyKotenOcr/raw/main/EasyKoten/EasyKotenOcr-installer.zip) をダウンロードし、展開してください。展開されたBATファイルをマウス右クリックから「管理者として実行」してください。
+
+2026年11月の統合作業により、本リポジトリは **4つの環境（フレーバー）** に対応しました。インストール手順も変更されています。古い `EasyKotenOcr-installer.zip`（Python 3.10 系の旧インストーラー）は**現在の構成では動作しないため使用しないでください**。
+
+### ステップ1: ご自分のPCに合うフレーバーを選ぶ
+
+| フレーバーID | 該当するPC | GPU加速 |
+|---|---|---|
+| `win11-amd64-cpu` | Windows 11（64ビット / Intel・AMD製CPU）、NVIDIA GPUなし | なし |
+| `win11-amd64-cu134` | Windows 11（64ビット）＋ NVIDIA GPU（CUDA 13.4 対応ドライバ入り） | あり |
+| `win11-arm64-cpu` | Windows 11 on ARM（Snapdragon等）、NVIDIA GPUなし | なし |
+| `win11-arm64-cu135` | Windows 11 on ARM ＋ NVIDIA GPU（RTX Spark / DGX Spark クラス、CUDA 13.5） | あり |
+
+- GPUを使うフレーバーでは、NVIDIA公式の**最新版のグラフィックドライバ**を先にインストールしてください（CUDA 13.4 / 13.5 対応版）。CUDA Toolkit や Visual Studio Build Tools を自分で入れる必要はありません。
+- 迷ったら一般的なPCは `win11-amd64-cpu`、ARM PCは `win11-arm64-cpu` を選んでください。NVIDIA GPUが載っている場合は対応する cu 付きフレーバーが大幅に高速です。
+
+### ステップ2: 前提ソフトを入れる
+
+| ソフト | 導入方法 |
+|---|---|
+| git | [git-scm.com](https://git-scm.com/downloads/win) からダウンロードしてインストール |
+| uv | コマンドプロンプトで `winget install --id astral-sh.uv` |
+
+Python 3.15.2 は uv が自動的にダウンロードして使うため、Python を手動でインストールする必要はありません。
+
+### ステップ3: プログラム本体を入手する
+
+**Gitリポジトリには、専用の mmcv ビルド済みホイール（`wheels\`）と学習済みモデルの実体は含まれていません。** これらは配布パッケージ（zip）に同梱して配布しています。配布パッケージをダウンロードし、任意のフォルダー（例: `C:\easykotenocr`）に展開してください。
+
+展開したフォルダーに `wheels\win11-<自分のフレーバー>\` が存在することを確認してください（ここにフレーバー専用の mmcv ホイールが入っています）。
+
+### ステップ4: 実行環境を作る
+
+コマンドプロンプトを開き、インストール先に移動してから、フレーバー用の仮想環境を作成します。以下は `win11-amd64-cu134` の例です。自分のフレーバーIDに読み替えてください。
+
+```
+cd /d C:\easykotenocr
+set UV_PROJECT_ENVIRONMENT=build\win11-amd64-cu134\venv
+uv sync --project profiles\win11-amd64-cu134
+```
+
+- インターネット経由でパッケージをダウンロードするため時間がかかります（GPUフレーバーは数GB）。ディスク空きは GPU フレーバーで約 12GB、CPU フレーバーで約 7GB を目安にしてください。
+- `uv sync` で Python が見つからないというエラーになる場合は、`profiles\win11-amd64-cu134\.python-version` の中身を `3.15.2` に書き換えて再実行してください（ビルドマシンの絶対パスが書かれている場合があります）。
+
+### ステップ5: 学習済みモデルをダウンロードする
+
+NDLラボから学習済みモデルをダウンロードし、次の場所に配置します。ブラウザで直接ダウンロードしても、同梱の `EasyKoten\download_models.py` を venv の Python で実行しても構いません。
+
+| モデル | ダウンロードURL | 配置先 |
+|---|---|---|
+| 文字認識モデル | <https://lab.ndl.go.jp/dataset/ndlkotensekiocr/trocr/model-ver2.zip> | zipを解凍して `src\text_kotenseki_recognition\model-ver2\` ができるように展開 |
+| レイアウト抽出モデル | <https://lab.ndl.go.jp/dataset/ndlkotensekiocr/layoutmodel/ndl_kotenseki_layout_ver3.pth> | `src\ndl_kotenseki_layout\models\ndl_kotenseki_layout_ver3.pth` |
+
+### ステップ6: 環境を確認する
+
+インストール先で次の2つを実行し、両方が成功すればインストール完了です（フレーバーIDは自分のものに読み替えてください）。
+
+```
+build\win11-amd64-cu134\venv\Scripts\python.exe tools\apply_venv_patches.py
+build\win11-amd64-cu134\venv\Scripts\python.exe scripts\verify_env.py --flavor win11-amd64-cu134
+```
+
+`verify_env.py` が `VERIFY OK` と表示すればOKです（`tools\apply_venv_patches.py` は `start_ocr.bat` が毎回自動実行しますが、手動で実行しても安全です）。
+
+## OCRの実行
+
+`start_ocr.bat` をダブルクリックして実行してください。PCの構成（CPUアーキテクチャとNVIDIA GPUの有無）を見て、使うフレーバーを自動的に選びます。
+
+- 入力フォルダー: `c:\ocr\in`、出力フォルダー: `c:\ocr\out-<フレーバーID>`、実行時オプションは `-s b -a` が指定されています。必要に応じて書き換えてください。
+- フレーバーを明示することもできます: `start_ocr.bat win11-amd64-cu134`
+- CPUフレーバーでは `config\config.cpu.yml`（device: cpu）が自動で使われます。GPUフレーバーは `config.yml` を使います。
+
+実行の目安（テスト画像4ページ、1ページあたり。PC構成により変動します）:
+
+| フレーバー | 1ページあたり |
+|---|---|
+| win11-amd64-cu134（RTX GPU） | 約1秒 |
+| win11-amd64-cpu | 約12秒 |
+| win11-arm64-cu135（RTX Spark） | 約3秒 |
+| win11-arm64-cpu | 約50秒 |
+
+**注意**: GPUとCPUでは浮動小数点演算の差分により、認識結果が一部異なることがあります。
+
+## BATファイルが実行する処理の内容
+
+`start_ocr.bat` は次の処理を行います。
+
+1. `PROCESSOR_ARCHITECTURE` と `nvidia-smi` の成否から、使うフレーバーを自動判定する（明示指定も可）。
+2. `build\<フレーバーID>\venv` の仮想環境を確認する（無ければ作成手順を表示して終了）。
+3. `tools\apply_venv_patches.py` を実行して、仮想環境内のパッケージに必要な修正を適用する。
+4. `scripts\verify_env.py` で環境を検証する。
+5. `main.py infer` を起動する（引数なしの場合は `c:\ocr\in` → `c:\ocr\out-<フレーバーID>` を標準処理）。
 
 ## 改変の内容
 1. Dockerを用いた仮想化技術を使用せずに、Windows Native 環境上で動作するようにしました。WSLやHyper-Vも不要です。
 2. GPUを用いずにCPUのみを使用してOCR処理を行うようにしました。処理速度は落ちますが、NVIDIA製のGPUを搭載していないPCでも動作可能になりました。
-3. 本アプリ動作の前提条件ソフトのインストール、環境構築、学習済モデルのダウンロードまでを全て実行する All In One なインストーラを用意しました。
-4. コマンドラインの入力が苦手な方向けに、OCRを実行するためのバッチファイルを用意しました。
-5. OCR実行時のオプションとして文字列認識結果を画像ファイルとして出力する機能を追加しました。
-6. 入出力フォルダーの構成を判りやすくシンプルにしました。
-
-## BATファイルが実行する処理の内容
-1. 下記のソフトウェアが未インストールならインストールします。未インストールのソフトが多い場合は時間を要します。特にVisual Studioは長時間となります。<br>
-   - git<br>
-   - Python version 3.10<br>
-   - Microsoft Visual Studio C++ Build Tools 2022<br>
-2. インストール先のフォルダーを何処にするかユーザーに指示を仰ぎます。既定ではc:\easykotenocrです。
-3. 上記で指示されたフォルダーに本リポジトリのクローンを生成します。
-4. pip + venvを用いてPython 3.10の仮想環境を構築し、必要なパッケージを仮想環境にインストールします。
-5. 学習済のモデルを国立国会図書館のNDLラボからダウンロードします。   　
-
-## OCRの実行
-EasyKotenOcrのフォルダーの中にあるstart_ocr.batをクリックして実行してください。
-入力フォルダにはc:\ocr\in、出力フォルダにはc:\ocr\out、実行時オプションは -s b -a が指定されています。必要に応じて書き換えてください。
+3. AMD64 と Windows on ARM の両対応とし、さらに GPU 有無を含む4通りのフレーバー構成としました。mmcv などの必須パッケージは各フレーバー用にビルド済みホイールとして同梱し、Visual Studio Build Tools 不要でインストールできるようにしました。
+4. uv を使うことで、Python のバージョン違いによる環境の破壊を防いでいます。
+5. コマンドラインの入力が苦手な方向けに、OCRを実行するためのバッチファイルを用意しました。
+6. OCR実行時のオプションとして文字列認識結果を画像ファイルとして出力する機能を追加しました。
+7. 入出力フォルダーの構成を判りやすくシンプルにしました。
 
 ## 環境構築後のフォルダー構成（参考）
 ```
 EasyKotenOCR
+├── build : フレーバー別のPython仮想環境が入るフォルダー（uvが作成）
+│   └── win11-amd64-cu134\venv : 各フレーバーの仮想環境
 ├── cli : CLIコマンド的に利用するPythonスクリプトの格納されたフォルダー
-├── EasyKoten : インスト－ラやPythonパッケージに適用する修正パッチの格納されたフォルダー
+├── cv2_shim : 仮想環境用に同梱した opencv パッケージの差し替え用フォルダー
+├── EasyKoten : 学習済みモデルのダウンロードスクリプト等が格納されたフォルダー
+├── profiles : フレーバー別の依存パッケージ定義（uv用プロファイル）
+│   ├── win11-amd64-cpu
+│   ├── win11-amd64-cu134
+│   ├── win11-arm64-cpu
+│   └── win11-arm64-cu135
+├── scripts : 環境検証（verify_env.py）等が格納されたフォルダー
 ├── src : 各推論処理のソースコード用フォルダー
 │   ├── ndl_kotenseki_layout : レイアウト抽出処理のソースコードの格納されたフォルダー
 │   ├── reading_order：読み順整序処理のソースコードの格納されたフォルダー
 │   └── text_kotenseki_recognition : 文字認識処理のソースコードの格納されたフォルダー
-├── venv : Python仮想環境用のフォルダー
-├── config.yml : サンプルの推論設定ファイル
+├── tools : 仮想環境への修正適用スクリプト（apply_venv_patches.py）が格納されたフォルダー
+├── vendor : mmcv のビルド用パッチ等が格納されたフォルダー
+├── wheels : フレーバー別の mmcv ビルド済みホイール（配布パッケージにのみ同梱）
+├── config : CPUフレーバー用の推論設定ファイルのフォルダー
+│   └── config.cpu.yml : device: cpu 用設定
+├── config.yml : サンプルの推論設定ファイル（GPU用）
 ├── LICENSE : CC 4.0のライセンスファイル
 ├── main.py : メインとなるPythonスクリプト
 ├── README.md : このファイル
-├── requirements-windows.txt : 必要なPythonパッケージリスト
-└── start_ocr.bat : main.pyを起動するためのバッチファイル
+└── start_ocr.bat : main.pyを起動するためのバッチファイル（フレーバー自動判定）
 ```
 
 
@@ -59,9 +148,9 @@ input_root/  (ユーザー指定)
  ・・・
  └── 岩舩山真名縁起_page07.jpg
 ```
-以下のコマンドで実行することができます。
+以下のコマンドで実行することができます（`<フレーバーID>` は自分のものに読み替えてください）。
 ```
-python main.py infer input_root output_dir -a
+build\<フレーバーID>\venv\Scripts\python.exe main.py infer input_root output_dir -a
 ```
 
 実行後の出力例は次の通りです。
