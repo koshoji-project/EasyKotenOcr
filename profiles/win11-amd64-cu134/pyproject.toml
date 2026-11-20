@@ -1,0 +1,39 @@
+[project]
+name = "easykotenocr-win11-amd64-cu134"
+version = "0.1.0"
+description = "EasyKotenOCR dependency profile: windows11 + amd64 + python3.15 + torch2.15.0+cu134"
+requires-python = ">=3.15,<3.16"
+dependencies = [
+    "albumentations==1.2.1",
+    "click>=8.5.1",
+    "datasets",
+    "mmengine==0.10.7+easykotenocr.1",
+    "mmdet==3.3.0",
+    "mmpretrain==1.2.0+easykotenocr.1",
+    "networkx",
+    "numpy",
+    "opencv-python==4.14.0.94",
+    "pandas",
+    "pillow",
+    "pyyaml>=6.0.3",
+    "requests",
+    "scikit-image==0.27.0rc1",
+    "scikit-learn",
+    "scipy",
+    "tqdm",
+    "torch==2.15.0+cu134",
+    "torchvision==0.29.2+cu134",
+    "transformers==4.57.6",
+    "wheel>=0.48.0",
+    "yaspin",
+    # ビルド済み mmcv（torch 2.15.0+cu134 Against、.3）。[tool.uv.sources] の path を参照
+    "mmcv",
+]
+
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cu134"
+
+[tool.uv.sources]
+mmengine = { path = "../../wheels/mmengine-0.10.7+easykotenocr.1-py3-none-any.whl" }
+mmpretrain = { path = "../../wheels/mmpretrain-1.2.0+easykotenocr.1-py2.py3-none-any.whl" }
+mmcv = { path = "../../wheels/win11-amd64-cu134/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_amd64.whl" }

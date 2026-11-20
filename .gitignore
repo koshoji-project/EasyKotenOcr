@@ -1,0 +1,48 @@
+# ============================================================
+# EasyKotenOCR — git に載せないもの（2026-11-19 設定）
+# 方針の詳細は HANDOVER.md §4 / §9-④。大きな binary（モデル・wheel）の
+# git 同梱か Git LFS 化はまだ未決なので、ここでは全部除外している。
+# ============================================================
+
+# --- Python の作業残骸 ---
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# --- 仮想環境とビルド残骸 ---
+.venv/
+build/
+# （flavor 専用の venv / staging / ログも上の build/ で一緒に除外される）
+
+# --- 大容量のモデル実体（配布方針が決まるまで除外。HANDOVER.md §9-④/⑥）---
+#     layout: 970 MB（.pth）/ trocr: 415 MB（.bin）+ 71 MB（.pt）
+src/**/*.pth
+src/**/*.zip
+*.pth
+*.pt
+*.bin
+*.safetensors
+*.joblib
+*.onnx
+
+# --- wheel（flavor 専用の binary。LFS 化するか配布 zip に移すか未決）---
+wheels/*.whl
+wheels/**/*.whl
+
+# --- 遺物を置いておく場所（git には入れない）---
+attic/
+
+# --- mmcv のソース checkout（2026-11-19 決定: git に入れない）---
+#     上流 v2.1.0（commit 57c4e25e）を各マシンで取り直す。
+#     git clone --depth 1 --branch v2.1.0 https://github.com/open-mmlab/mmcv.git mmcv
+#     入れ子 git のまま git add すると gitlink だけ入り、クローン先で中身が空になる。
+mmcv/
+
+# --- その他の残骸 ---
+uv.lock.bak-py310
+time.txt
+
+# 注意:
+#  - 既に追跡済みのファイルは .gitignore では無効にならない。消すなら git rm --cached。
+#  - EasyKoten/EasyKotenOcr-installer.zip は過去から追跡されている（意図的か要確認）。

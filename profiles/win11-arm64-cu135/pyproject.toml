@@ -1,0 +1,64 @@
+# ============================================================
+# win11-arm64-cu135 (Release 4) — ARM64 GPU flavor
+#   - torch / torchvision: NVIDIA nvtorch_oot index（win_arm64 の供給元）
+#   - mmcv: 本 flavor 専用 wheel（5 オペ除去 + local tag .3）。
+#     2 段階運用: まず mmcv なしで sync（torch 入りの venv を作る）→
+#     build_wheels.ps1 -Flavor win11-arm64-cu135 で wheel ビルド →
+#     下の [tool.uv.sources] の mmcv を有効化して uv lock / uv sync。
+#   - cv2: 純 Python の cv2 シム（cv2_shim/、パッケージ名 opencv-python、
+#     モジュール cv2）を editable 参照。旧 N1X 実運用と等価（シム単独・
+#     albumentations/headless なし）。PyPI には 2026-11-20 時点で
+#     opencv-python-headless 5.1.0.95 の win_arm64 wheel が存在するが、
+#     未検証の 5.x 系ではなく実証済みのシムで運用するため、シムを
+#     shadowing し得る albumentations は profile から除外している。
+#   - mmpretrain / mmengine: vendor patch wheel（wheels/ 共通）。
+#     patched mmpretrain を使うので mmpretrain.models のフル import が
+#     成立し、アプリ側ソースの回避策は不要。
+# ============================================================
+[project]
+name = "easykotenocr-win11-arm64-cu135"
+version = "0.1.0"
+description = "EasyKotenOCR dependency profile: windows11 on arm + arm64 + python3.15 + torch2.15.0+cu135"
+requires-python = ">=3.15,<3.16"
+dependencies = [
+    # NOTE: albumentations==1.2.1 は AMD profile にはあるが、これは
+    # opencv-python-headless を引き込む。win_arm64 には headless 5.1.0.95 の
+    # wheel があり（2026-11-19 実測）、それが本プロジェクトの cv2 シムを
+    # shadowing してしまうため ARM では除外する。infer 経路は albumentations
+    # を使わない（旧 N1X 実運用環境にも無かった）。
+    "click>=8.5.1",
+    # NOTE: "datasets" は AMD profile にあるが win_arm64 に pyarrow wheel が
+    # 一切無い（2026-11-19 PyPI 実測 0 件）ため ARM では解決不能。
+    # アプリの infer 経路は datasets を使わない（src/.../train.py のみ = 学習用）。
+    "mmengine==0.10.7+easykotenocr.1",
+    "mmdet==3.3.0",
+    "mmpretrain==1.2.0+easykotenocr.1",
+    "networkx",
+    "numpy",
+    "opencv-python",
+    "pandas",
+    "pillow",
+    "pyyaml>=6.0.3",
+    "requests",
+    "setuptools<81",   # mmcv のレガシー setup.py が pkg_resources を import（setuptools>=81 で削除）
+    "scikit-image==0.27.0rc1",   # cp315 win_arm64 wheel あり（PyPI を 2026-11-19 に確認）
+    "scikit-learn",
+    "scipy",
+    "tqdm",
+    "torch==2.15.0+cu135",
+    "torchvision==0.29.2+cu135",
+    "transformers==4.57.6",
+    "wheel>=0.48.0",
+    "yaspin",
+    "mmcv",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.nvidia.com/nvtorch_oot/"
+
+[tool.uv.sources]
+mmengine = { path = "../../wheels/mmengine-0.10.7+easykotenocr.1-py3-none-any.whl" }
+mmpretrain = { path = "../../wheels/mmpretrain-1.2.0+easykotenocr.1-py2.py3-none-any.whl" }
+# opencv-python: 実証済みの cv2 シム（PyPI の headless 5.x は未検証なので不採用）
+opencv-python = { path = "../../cv2_shim", editable = true }
+mmcv = { path = "../../wheels/win11-arm64-cu135/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_arm64.whl" }

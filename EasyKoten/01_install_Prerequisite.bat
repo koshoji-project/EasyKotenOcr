@@ -152,6 +152,8 @@ uv --version >nul 2>&1
 if %ERRORLEVEL%==0 (
     echo uv は既にインストールされています。
     uv --version
+    rem Python 3.15 安定版のマネージドダウンロードには uv 0.13 以降が必要
+    uv self update >nul 2>&1 || echo 警告: uv の自動更新に失敗しました(既存の uv を使用します)。
     goto CLONE
 )
 echo uv がインストールされていません。
