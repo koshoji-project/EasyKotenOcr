@@ -8,9 +8,9 @@
 | 項目 | 値（記入） |
 |---|---|
 | wheel ファイル名 | `mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_arm64.whl` |
-| sha256 | `91ADB7CC84AFF43A88CC5B2B7602A50FC0A623EC59569C3E73B4C4A2C9B220DA` |
-| size | 9.3 MB（`_ext.cp315-win_arm64.pyd` 解凍後 30.22 MB。CUDA 無し CPU-only ビルド） |
-| ビルド日 | 2026-11-20 |
+| sha256 | `AD6F795A96485BA921A7D91D564E268BB688199454329578E68D30CBA2D64D77`（2026-11-21 残骸除去再ビルド版。旧 2026-11-20 初版 `91ADB7CC…20DA` は package data 残骸同梱のため廃棄） |
+| size | 4.2 MB（`_ext.cp315-win_arm64.pyd` 解凍後 12.98 MB。CUDA 無し CPU-only ビルド。旧初版は pyd 30.22 MB だったが、同一ソース・同一スクリプトの再ビルドで縮退。verify_env / OCR 実走とも OK を確認済み） |
+| ビルド日 | 2026-11-21（初版 2026-11-20） |
 | N1X の OS / arch | Windows 11 ARM64 / NVIDIA RTX Spark（GB10）/ 統一メモリ 46.5 GB |
 | Python | 3.15.2（uv 管理: `C:\Users\gesho\AppData\Roaming\uv\python\cpython-3.15.2-windows-aarch64-none`） |
 | torch（ABI 依存） | `2.15.0+cu134`（nvtorch_oot の cu134 版を **device=cpu で運用**。※PyPI に win_arm64 の CPU 専用 2.15 wheel が無いため。`torch.cuda.is_available() = False` 確認済み） |
@@ -23,7 +23,7 @@
 | ステージング | `vendor/mmcv-patches/stage_mmcv.py --suffix easykotenocr.3`（5 オペ除外） |
 | setup.py パッチ | `scripts/mmcv_setup_py315.py`（C++20 / `/Zc:preprocessor`、CPU は USE_CUDA=0） |
 | 环境回避 | `setuptools<81` pin 要（pkg_resources）。`TORCH_DONT_CHECK_COMPILER_ABI=1` は ps1 経由で常に設定 |
-| ビルドログ | `build/win11-arm64-cpu/logs/mmcv_build_20261120-062459.log`（sha256 `3c91234ca8b98c79e7c20564398ebd0ad41f0b958845dba7c215ce603071af87`。`..._054156.log` は中断前の初回分）。ビルドコマンド: `scripts/build_wheels.ps1 -Flavor win11-arm64-cpu -Suffix easykotenocr.3 -MaxJobs 4` |
+| ビルドログ | `build/win11-arm64-cpu/logs/mmcv_build_20261121-174314.log`（残骸除去再ビルド版。旧ログ: `..._20261120-062459.log` は初版、`..._054156.log` は中断前）。ビルドコマンド: `scripts/build_wheels.ps1 -Flavor win11-arm64-cpu`（既定 MAX_JOBS=4） |
 | ビルド並列 | `MAX_JOBS=4`（統一メモリ環境のため並列制限） |
 
 local tag / ABI の確定（テンプレ §「local tag は N1X の実ファイル名を正にする」への回答）:
@@ -38,13 +38,21 @@ local tag / ABI の確定（テンプレ §「local tag は N1X の実ファイ�
 - `mmcv/ops/*.py` の Python ラッパー: **なし**
 - `mmcv/ops/csrc/pytorch/pybind.cpp` の登録: **なし**
 - `_ext.pyd` へのコンパイル: **なし**（venv で `hasattr` 全 5 件 False）
-- 注記: `mmcv/ops/csrc/` 配下に該当オペの生ソース (.cpp/.cu) が package data として残骸同梱（AMD flavor wheel と同様。コンパイルも import もされない）
+- 注記: **残骸除去済み（2026-11-21）**。`stage_mmcv.py` の拡張（AMD64 側 `e61e551`）により、除外 5 オペの生ソース（.cpp/.cu、9 ファイル）はステージング段階で削除され wheel に同梱されない。`scripts/scan_wheel_ops.py <whl>` → 0 hit / exit 0 で確認
 
 ## cv2（方針変更: 自前ビルドではなく純 Python シムで確定）
 
 cu135 flavor と同じ。`C:\easykotenocr\cv2_shim` の editable install（`cv2.__version__` = 4.12.0、dist 名 opencv-python 互換）。albumentations は profile から除外して headless cv2 の shadowing を構造的に防止。旧 N1X 実証ランタイムとの行動等価を優先。
 
-## N1X 側での実機検証結果（2026-11-20）
+## N1X 側での実機検証結果（2026-11-20 初版 / 2026-11-21 再ビルド版）
+
+**2026-11-21 再ビルド版（現行 wheel）**:
+- `scripts/verify_env.py --flavor win11-arm64-cpu` → **VERIFY OK**
+- OCR 実走: `main.py infer c:/ocr/in c:/ocr/out-new-cpu -a -s b -c config/config.cpu.yml` → **45.4 秒/画像**、正常終了
+- `.txt` を cu135 ベースライン（`c:/ocr/out-win11-arm64-cu135/2026-11-21_051523`）と比較: **5 ファイル中 4 ファイルバイト一致**。page03 の 1 文字のみ差異（`いとうつくしに` ↔ `いとうつくしう`、bbox 1 個が 1px 相当シフト）
+  - 原因の切り分け済み: 同一 wheel で 2 回実行し完全一致（実行間ブレなし）。CPU ビルドは除外 5 オペ（cuda/npu/parrots 配下）を一切コンパイルしないため再ビルド前後でコンパイル対象ソースが同一で、この差異は再ビルド由来ではない。**CPU/GPU 実装差による既存の数値挙動**（11-20 の検証は page01 のみで、page03 の CPU 出力は比較済みベースラインが存在しなかった）。`いとうつくしう` は歴史的仮名遣いとしては正しい表記
+
+**2026-11-20 初版**:
 
 - `python scripts/verify_env.py --flavor win11-arm64-cpu` → **VERIFY OK**（cuda_avail: False は想定通り）
 - `mmcv.ops` の `nms / RoIAlign / box_iou_rotated` が CPU で動作

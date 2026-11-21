@@ -163,7 +163,13 @@ powershell -File scripts\build_wheels.ps1 -Flavor win11-amd64-cu134
 | 3 | win11-amd64-cpu 再ビルド + 検証 3 点 | AMD64 PC | ☑ 完了 2026-11-21（scan CLEAN / VERIFY OK / OCR .txt が 11-19 出力とバイト一致。sha `36C52A50…`） |
 | 4 | win11-amd64-cu134 再ビルド + 検証 3 点 | AMD64 PC | ☑ 完了 2026-11-21（同上。CUDA 実走含め。9.5MB / sha `04A6612A…`） |
 | 5 | SHA256SUMS 更新（AMD 分）+ PROVENANCE + コミット | AMD64 PC | ☑ 完了 2026-11-21（AMD 2 行のみ更新、ARM 2 行は不変を確認済み） |
-| 6 | win11-arm64-cpu 再ビルド + 検証 | kotengawa (N1X) | ☐ AMD 変更待ち（stage_mmcv.py の変更はコミット済み、取得可能） |
-| 7 | win11-arm64-cu135 再ビルド + 検証 | kotengawa (N1X) | ☐ AMD 変更待ち |
-| 8 | SHA256SUMS 更新（ARM 分）+ PROVENANCE + コミット | kotengawa (N1X) | ☐ |
-| 9 | push | ユーザー | ☐ 4 flavor 揃ってから判断 |
+| 6 | win11-arm64-cpu 再ビルド + 検証 | kotengawa (N1X) | ☑ 完了 2026-11-21（scan CLEAN / VERIFY OK / OCR 45.4 秒・画像。cu135 ベースラインと 4/5 バイト一致、page03 の 1 文字のみ差異は CPU/GPU 実装差の既存挙動と切り分け済み（同一 wheel 2 回実行で一致、CPU ビルドは除外ファイルをコンパイルせず）。sha `AD6F795A96485BA9…` / 4.2 MB） |
+| 7 | win11-arm64-cu135 再ビルド + 検証 | kotengawa (N1X) | ☑ 完了 2026-11-21（scan CLEAN / VERIFY OK（box_iou_rotated CUDA 0.3333）/ OCR 2.60 秒・画像、再ビルド前 `.txt` 5/5 バイト一致。sha `D65CA9ABEE6963CD…` / 2.9 MB） |
+| 8 | SHA256SUMS 更新（ARM 分）+ PROVENANCE + コミット | kotengawa (N1X) | ☑ 完了 2026-11-21（`check_wheels.py --record` で ARM 2 行のみ更新。両 PROVENANCE 更新済み） |
+| 9 | push | ユーザー | ☐ 4 flavor 揃ったので判断可能な状態 |
+
+### 7.1 N1X 追記（2026-11-21）
+
+- 4 flavor すべてで「stage → ビルド → scan 残骸 0 → verify_env OK → OCR 実走 OK」が揃った
+- AMD が §5 で懸念した `mmcv_setup_py315.py` の parrots 分岐 `.remove()` は ARM の 2 flavor でも ValueError 発生なし
+- 再ビルドコマンド: `scripts/build_wheels.ps1 -Flavor win11-arm64-cpu` / `... -Flavor win11-arm64-cu135 -MaxJobs 6`（2026-11-21 17:43 並列実行、ログは各 `build/<flavor>/logs/mmcv_build_20261121-174314.log`）

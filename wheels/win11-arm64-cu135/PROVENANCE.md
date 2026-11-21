@@ -8,9 +8,9 @@
 | 項目 | 値（記入） |
 |---|---|
 | wheel ファイル名 | `mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_arm64.whl` |
-| sha256 | `7CCDBAB983122A865CE36B6EF715B3A159D40827718B5D7D07F13DAA0A0F1F47` |
-| size | 5.5 MB（`_ext.cp315-win_arm64.pyd` 解凍後 26.37 MB。sm_121 単一 arch） |
-| ビルド日 | 2026-11-20 |
+| sha256 | `D65CA9ABEE6963CD7CBB39090CBCBFF9AD1B5C8EE749C2510A2A13AAF66A887D`（2026-11-21 残骸除去再ビルド版。旧 2026-11-20 初版 `7CCDBAB9…1F47` は package data 残骸同梱のため廃棄） |
+| size | 2.9 MB（`_ext.cp315-win_arm64.pyd` 解凍後 11.88 MB。sm_121 単一 arch。旧初版は pyd 26.37 MB。verify_env / OCR 実走・再ビルド前 `.txt` と 5/5 バイト一致を確認済み） |
+| ビルド日 | 2026-11-21（初版 2026-11-20） |
 | N1X の OS / arch | Windows 11 ARM64 / NVIDIA RTX Spark（GB10、GPU 6144-core Blackwell）/ 統一メモリ 46.5 GB（増配後。旧 30.5 GB では nvcc が OOM した） |
 | Python | 3.15.2（uv 管理: `C:\Users\gesho\AppData\Roaming\uv\python\cpython-3.15.2-windows-aarch64-none`） |
 | torch（ABI 依存） | `2.15.0+cu135`（`pypi.nvidia.com/nvtorch_oot/`） |
@@ -23,8 +23,8 @@
 | ステージング | `vendor/mmcv-patches/stage_mmcv.py --suffix easykotenocr.3`（5 オペ除外） |
 | setup.py パッチ | `scripts/mmcv_setup_py315.py`（C++20 / `/Zc:preprocessor` / `USE_CUDA=1`） |
 | 环境回避 | `TORCH_DONT_CHECK_COMPILER_ABI=1`: **要**（日本語 cl バナーの cp932 復号失敗対策）。追加で **`setuptools<81` pin 要**（mmcv レガシー setup.py の pkg_resources import。setuptools 84 で ModuleNotFoundError） |
-| ビルドログ | `build/win11-arm64-cu135/logs/mmcv_build_20261120-063242.log`（sha256 `55db7e1e6fb3eb4fa8d283a97c465e64a14720dafda12fdff3395393b7f3718c`）。失敗履歴: `..._20261120-043047.log`（pkg_resources）/ `..._20261120-045924.log`（nvcc OOM @ [67/132]） |
-| ビルドコマンド | `scripts/build_wheels.ps1 -Flavor win11-arm64-cu135 -Suffix easykotenocr.3 -SkipStage -MaxJobs 6`（統一メモリ環境のため MAX_JOBS で並列制限。無制限禁止） |
+| ビルドログ | `build/win11-arm64-cu135/logs/mmcv_build_20261121-174314.log`（残骸除去再ビルド版。初版ログ: `..._20261120-063242.log`。失敗履歴: `..._20261120-043047.log`（pkg_resources）/ `..._20261120-045924.log`（nvcc OOM @ [67/132]）） |
+| ビルドコマンド | `scripts/build_wheels.ps1 -Flavor win11-arm64-cu135 -MaxJobs 6`（統一メモリ環境のため MAX_JOBS で並列制限。無制限禁止） |
 
 除外オペ（ライセンス上の理由。レビューなしに復活させないこと）:
 `upfirdn2d`, `fused_bias_leakyrelu`, `bias_act`, `filtered_lrelu`, `conv2d_gradfix`
@@ -33,7 +33,7 @@
 - `mmcv/ops/*.py` の Python ラッパー: **なし**
 - `mmcv/ops/csrc/pytorch/pybind.cpp` の登録: **なし**
 - `_ext.pyd` へのコンパイル: **なし**（venv で `hasattr` 全 5 件 False）
-- 注記: `mmcv/ops/csrc/` 配下に該当オペの生ソース (.cpp/.cu) が package data として残骸同梱（AMD flavor wheel と同様。コンパイルも import もされない。完全除去は stage_mmcv.py 拡張 + 全 flavor 再ビルドが必要なので未実施）
+- 注記: **残骸除去済み（2026-11-21）**。`stage_mmcv.py` の拡張（AMD64 側 `e61e551`）により、除外 5 オペの生ソース（.cpp/.cu、9 ファイル）はステージング段階で削除され wheel に同梱されない。`scripts/scan_wheel_ops.py <whl>` → 0 hit / exit 0 で確認
 
 ## cv2（方針変更: 自前ビルドではなく純 Python シムで確定）
 
@@ -46,7 +46,15 @@
 | shadowing 対策 | albumentations を ARM profile から除外し、headless cv2 が入らない構造にした（除外前は headless 5.1.0.95 が混入し `import cv2` がそちらを指していた） |
 | アプリ要求 API | シムが充足（両 flavor venv で import・OCR 実走 OK） |
 
-## N1X 側での実機検証結果（2026-11-20）
+## N1X 側での実機検証結果（2026-11-20 初版 / 2026-11-21 再ビルド版）
+
+**2026-11-21 再ビルド版（現行 wheel）**:
+- `scripts/scan_wheel_ops.py` → 0 hit（残骸なし）
+- `scripts/verify_env.py --flavor win11-arm64-cu135` → **VERIFY OK**（box_iou_rotated on CUDA → 0.3333）
+- OCR 実走: `main.py infer c:/ocr/in c:/ocr/out-new-cu135 -a -s b`（既定 config → cuda:0）→ **2.60 秒/画像**
+- `.txt` 5 ファイルすべて再ビルド前ベースライン（`c:/ocr/out-win11-arm64-cu135/2026-11-21_051523`、旧 wheel で出力）と**バイト一致** → 再ビルドは GPU 数値挙動を変えない
+
+**2026-11-20 初版**:
 
 - `python scripts/verify_env.py --flavor win11-arm64-cu135` → **VERIFY OK**
   - torch 2.15.0+cu135 / CUDA 13.5 / `cuda.is_available()=True`（RTX Spark N1X）
