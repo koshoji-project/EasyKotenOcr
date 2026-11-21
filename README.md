@@ -53,6 +53,8 @@
 | git | [git-scm.com](https://git-scm.com/downloads/win) からダウンロードしてインストール |
 | uv | コマンドプロンプトで `winget install --id astral-sh.uv` |
 
+**uv は必ず最新版を使ってください。** 同梱するロックファイルは新しい形式（revision 5）で書かれており、古い uv では読み込めずインストールに失敗します。すでに uv が入っている場合は `uv self update` で更新してから進めてください（uv が古いというエラーが出た場合も、まず `uv self update` を試してください）。
+
 Python 3.15.2 は uv が自動的にダウンロードして使うため、Python を手動でインストールする必要はありません。
 
 ### ステップ3: プログラム本体を入手する
