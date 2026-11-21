@@ -4,22 +4,32 @@
 
 | 項目 | 値 |
 |---|---|
-| sha256 | `E4159D324C5CC041DD3008C32775CA4BBD16B99D18004966EA74DDCB1B52CB4A` |
-| size | 1.0 MB（`mmcv/_ext.cp315-win_amd64.pyd` は 0.99 MB） |
-| ビルド日 | 2026-11-19 |
+| sha256 | `36C52A50305CD7A32253BBA0766E3574625F8FB2600D220CF73828CA6ED3EED8` |
+| size | 1.0 MB（`mmcv/_ext.cp315-win_amd64.pyd` は 0.99 MB / エントリ 510 件） |
+| ビルド日 | 2026-11-21（package data 残骸除去リビルド。旧 2026-11-19 版は sha `E4159D32…` で差し替え） |
 | 元ソース | open-mmlab/mmcv **v2.1.0**（tag v2.1.0, commit `57c4e25e`）＝ `C:\easykotenocr\mmcv` |
-| ステージング | `vendor/mmcv-patches/stage_mmcv.py --suffix easykotenocr.3`（5 オペ除外 + version local tag） |
+| ステージング | `vendor/mmcv-patches/stage_mmcv.py --suffix easykotenocr.3`（5 オペ除外 + **残骸生ソース削除 `EXCLUDED_CSRC_EXTRA` 9 件 + cudabind ブロック除去 + 残骸自己チェック** + version local tag） |
 | setup.py | `scripts/mmcv_setup_py315.py`（C++20 / `/Zc:preprocessor` / `USE_CUDA=1`） |
 | Python | CPython 3.15.2 |
 | torch（ABI 依存） | **2.15.0+cpu**（`profiles/win11-amd64-cpu` の venv） |
 | CUDA | 不使用（ビルドログ: `Compiling mmcv._ext only with CPU`） |
 | MSVC | 14.44.35207（VS Build Tools 2022） |
-| ninja | `-j 4`（USE_NINJA=1）。オブジェクト 73 個 |
-| ビルドログ | `build/win11-amd64-cpu/logs/mmcv_build_20261119-202116.log` |
-| コマンド | `scripts/build_wheels.ps1 -Flavor win11-amd64-cpu -Suffix easykotenocr.3` |
+| ninja | `-j 12`（USE_NINJA=1、MAX_JOBS=12）。オブジェクト 73 個 |
+| ビルドログ | `build/win11-amd64-cpu/logs/mmcv_build_20261121-163207.log` |
+| コマンド | `scripts/build_wheels.ps1 -Flavor win11-amd64-cpu -MaxJobs 12` |
 
 CUDA 版（`wheels/win11-amd64-cu134/`）と同じ local tag `.3` だが、**torch のビルド違いで ABI が違うため混用不可**。
-CPU 版には cuDNN/CUDA ランタイムの依存が無いので wheel が小さい（cu134 版は fatbin 込みで 21.9MB）。
+CPU 版には cuDNN/CUDA ランタイムの依存が無いので wheel が小さい（cu134 版は fatbin 込みで 9.5MB）。
+
+## 再ビルド検証（2026-11-21、残骸除去リビルド後）
+
+- `scripts/scan_wheel_ops.py <wheel>` → **0 hit(s) / RESULT: CLEAN**（wheel 内 package data に 5 オペ名 0 件）
+- venv 入れ直し（`uv pip install --reinstall`）+ `tools/apply_venv_patches.py` →
+  `scripts/verify_env.py --flavor win11-amd64-cpu` → **VERIFY OK**（mmcv は site-packages から import）
+- OCR 実走: `main.py infer c:/ocr/in c:/ocr/out-cpu-rebuild -a -s b -c config/config.cpu.yml`
+  → 4 ページ完走・exit 0・平均 11.96 秒/画像、`.txt` は 2026-11-19 出力（`out-cpu/2026-11-19_202502`）と**バイト一致**
+- CPU ビルドは元々除外 4 .cu をコンパイルしていなかった（73 objects 不変）ため、pyd は実質同一。
+  変わったのは wheel 同梱の残骸ソース削除と RECORD のみ
 
 ## 環境回避（CPU でも同じ）
 

@@ -1,7 +1,7 @@
 ad41840dd4cf26ddb418e3cdd4aa7274b921a2a678367f3d4a70870b6767d45c  mmcv-2.1.0+easykotenocr.2-cp315-cp315-win_amd64.whl
 24f173b7a1470d9d2ecda956acd9978e504dc7f5d709a3e8b00df385d25bc2a7  mmengine-0.10.7+easykotenocr.1-py3-none-any.whl
 cb7f0b80c612229614ab88b44a045e36e0fafe6498a96ac51e247310ec9fc0c2  mmpretrain-1.2.0+easykotenocr.1-py2.py3-none-any.whl
-e4159d324c5cc041dd3008c32775ca4bbd16b99d18004966ea74ddcb1b52cb4a  win11-amd64-cpu/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_amd64.whl
-78c1b3a5e08a02d8cc2ccffd0383f5bc740e63eea9b1daf34bad597e903419f9  win11-amd64-cu134/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_amd64.whl
+36c52a50305cd7a32253bba0766e3574625f8fb2600d220cf73828ca6ed3eed8  win11-amd64-cpu/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_amd64.whl
+04a6612ae05c5658bd94675e8b79eb767b830c5f931e5003b4981bc60dceb8b5  win11-amd64-cu134/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_amd64.whl
 91adb7cc84aff43a88cc5b2b7602a50fc0a623ec59569c3e73b4c4a2c9b220da  win11-arm64-cpu/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_arm64.whl
 7ccdbab983122a865ce36b6ef715b3a159d40827718b5d7d07f13daa0a0f1f47  win11-arm64-cu135/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_arm64.whl

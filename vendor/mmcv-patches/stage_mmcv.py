@@ -13,8 +13,16 @@
    ``conv2d_gradfix``（StyleGAN2 系。カーネルソースが別ライセンス）
    - Python ラッパ（mmcv/ops/*.py）
    - C++ ソース（mmcv/ops/csrc/pytorch/*.cpp）
+   - kernel 生ソースの実体（``EXCLUDED_CSRC_EXTRA``: pytorch/cuda/*.cu、
+     pytorch/npu/*、parrots/*。package data として wheel に同梱されていた残骸）
    - ``mmcv/ops/__init__.py`` の import と ``__all__`` の該当項目
    - ``mmcv/ops/csrc/pytorch/pybind.cpp`` の宣言と ``m.def`` 登録
+   - ``pytorch/cuda/cudabind.cpp`` と ``parrots/cudabind.cpp`` の
+     ``*_op`` / ``*_op_impl`` 宣言 + ``REGISTER_DEVICE_IMPL`` ブロック
+     （CUDA ビルドは cuda/*.cpp を glob で拾うため、除去しないと
+     ``*_op_impl`` の未定義参照でリンクに落ちる）
+   - 最終自己チェック: ``mmcv/ops/csrc`` 配下に 5 オペ名を含むファイル名が
+     残っていたら fail
 2. ``mmcv/version.py`` に local version suffix を付け、suffix を許容するよう
    ``version_info`` を直す（PEP 440 の ``2.1.0+easykotenocr.3`` 対応）
 
@@ -26,6 +34,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -44,6 +53,23 @@ EXCLUDED_CSRC_CPP = [
     "fused_bias_leakyrelu.cpp",
     "upfirdn2d.cpp",
 ]
+# wheel の package data として同梱されていた kernel 生ソースの実体
+# （mmcv/ops/csrc/ からの相対パス。HANDOVER-TO-AMD64.md §3/§4 Step 1）
+EXCLUDED_CSRC_EXTRA = [
+    "pytorch/cuda/bias_act_cuda.cu",
+    "pytorch/cuda/filtered_lrelu.cu",
+    "pytorch/cuda/fused_bias_leakyrelu_cuda.cu",
+    "pytorch/cuda/upfirdn2d_kernel.cu",
+    "pytorch/npu/fused_bias_leakyrelu_npu.cpp",
+    "parrots/fused_bias_leakyrelu.cpp",
+    "parrots/fused_bias_parrots.cpp",
+    "parrots/upfirdn2d.cpp",
+    "parrots/upfirdn2d_parrots.cpp",
+]
+# 残骸ファイル名の自己チェック用（scripts/scan_wheel_ops.py と同一パターン）
+RESIDUE_NAME_RE = re.compile(
+    r"upfirdn2d|bias_act|fused_bias_leakyrelu|filtered_lrelu|conv2d_gradfix", re.I
+)
 OPS_INIT_IMPORTS = [
     "from .bias_act import bias_act\n",
     "from .conv2d_gradfix import conv2d, conv_transpose2d\n",
@@ -110,6 +136,101 @@ PYBIND_DEF_BLOCKS = [
     ),
 ]
 
+# mmcv/ops/csrc/pytorch/cuda/cudabind.cpp から除去するブロック
+# （関数宣言・_op_impl 宣言・REGISTER_DEVICE_IMPL の 3 点セット。
+#  CUDA ビルドは scripts/mmcv_setup_py315.py が glob('.../pytorch/cuda/*.cpp')
+#  でこれを含むため、削除した .cu の *_op_impl を参照したままにすると
+#  未定義シンボルでリンクに落ちる。末尾の空行ごと消す）
+CUDA_CUDABIND_BLOCKS = [
+    (
+        "torch::Tensor fused_bias_leakyrelu_op(const torch::Tensor &input,\n"
+        "                                      const torch::Tensor &bias,\n"
+        "                                      const torch::Tensor &refer, int act,\n"
+        "                                      int grad, float alpha, float scale);\n"
+        "\n"
+        "torch::Tensor fused_bias_leakyrelu_op_impl(const torch::Tensor &input,\n"
+        "                                           const torch::Tensor &bias,\n"
+        "                                           const torch::Tensor &refer, int act,\n"
+        "                                           int grad, float alpha, float scale);\n"
+        "REGISTER_DEVICE_IMPL(fused_bias_leakyrelu_op_impl, CUDA,\n"
+        "                     fused_bias_leakyrelu_op);\n"
+        "\n"
+    ),
+    (
+        "torch::Tensor bias_act_op_impl(const torch::Tensor &input,\n"
+        "                               const torch::Tensor &bias,\n"
+        "                               const torch::Tensor &xref,\n"
+        "                               const torch::Tensor &yref,\n"
+        "                               const torch::Tensor &dy, int grad, int dim,\n"
+        "                               int act, float alpha, float gain, float clamp);\n"
+        "\n"
+        "torch::Tensor bias_act_op(const torch::Tensor &input, const torch::Tensor &bias,\n"
+        "                          const torch::Tensor &xref, const torch::Tensor &yref,\n"
+        "                          const torch::Tensor &dy, int grad, int dim, int act,\n"
+        "                          float alpha, float gain, float clamp);\n"
+        "\n"
+        "REGISTER_DEVICE_IMPL(bias_act_op_impl, CUDA, bias_act_op);\n"
+        "\n"
+    ),
+    (
+        "torch::Tensor filtered_lrelu_act_op_impl(torch::Tensor x, torch::Tensor si,\n"
+        "                                         int sx, int sy, float gain,\n"
+        "                                         float slope, float clamp,\n"
+        "                                         bool writeSigns);\n"
+        "\n"
+        "torch::Tensor filtered_lrelu_act_op(torch::Tensor x, torch::Tensor si, int sx,\n"
+        "                                    int sy, float gain, float slope,\n"
+        "                                    float clamp, bool writeSigns);\n"
+        "\n"
+        "REGISTER_DEVICE_IMPL(filtered_lrelu_act_op_impl, CUDA, filtered_lrelu_act_op);\n"
+        "\n"
+    ),
+    (
+        "torch::Tensor upfirdn2d_op(torch::Tensor input, torch::Tensor filter, int upx,\n"
+        "                           int upy, int downx, int downy, int padx0, int padx1,\n"
+        "                           int pady0, int pady1, bool flip, float gain);\n"
+        "\n"
+        "torch::Tensor upfirdn2d_op_impl(torch::Tensor input, torch::Tensor filter,\n"
+        "                                int upx, int upy, int downx, int downy,\n"
+        "                                int padx0, int padx1, int pady0, int pady1,\n"
+        "                                bool flip, float gain);\n"
+        "REGISTER_DEVICE_IMPL(upfirdn2d_op_impl, CUDA, upfirdn2d_op);\n"
+        "\n"
+    ),
+]
+
+# mmcv/ops/csrc/parrots/cudabind.cpp から除去する同名ブロック
+# （parrots 分岐は Windows ビルドでは使われないが、参照残りを消す hygiene 目的）
+PARROTS_CUDABIND_BLOCKS = [
+    (
+        "torch::Tensor fused_bias_leakyrelu_op(const torch::Tensor& input,\n"
+        "                                      const torch::Tensor& bias,\n"
+        "                                      const torch::Tensor& refer, int act,\n"
+        "                                      int grad, float alpha, float scale);\n"
+        "\n"
+        "torch::Tensor fused_bias_leakyrelu_op_impl(const torch::Tensor& input,\n"
+        "                                           const torch::Tensor& bias,\n"
+        "                                           const torch::Tensor& refer, int act,\n"
+        "                                           int grad, float alpha, float scale);\n"
+        "REGISTER_DEVICE_IMPL(fused_bias_leakyrelu_op_impl, CUDA,\n"
+        "                     fused_bias_leakyrelu_op);\n"
+        "\n"
+    ),
+    (
+        "torch::Tensor upfirdn2d_op(const torch::Tensor& input,\n"
+        "                           const torch::Tensor& kernel, int up_x, int up_y,\n"
+        "                           int down_x, int down_y, int pad_x0, int pad_x1,\n"
+        "                           int pad_y0, int pad_y1);\n"
+        "\n"
+        "torch::Tensor upfirdn2d_op_impl(const torch::Tensor& input,\n"
+        "                                const torch::Tensor& kernel, int up_x, int up_y,\n"
+        "                                int down_x, int down_y, int pad_x0, int pad_x1,\n"
+        "                                int pad_y0, int pad_y1);\n"
+        "REGISTER_DEVICE_IMPL(upfirdn2d_op_impl, CUDA, upfirdn2d_op);\n"
+        "\n"
+    ),
+]
+
 
 def fail(msg: str) -> None:
     raise SystemExit(f"STAGING FAILED: {msg}")
@@ -140,7 +261,16 @@ def drop_excluded_ops(dst: Path) -> None:
         if not t.exists():
             fail(f"除外対象の C++ ソースが見つからない: {t}")
         t.unlink()
-    print(f"  removed {len(EXCLUDED_PY_WRAPPERS)} python wrappers, {len(EXCLUDED_CSRC_CPP)} csrc sources")
+    for relp in EXCLUDED_CSRC_EXTRA:
+        t = dst / "mmcv" / "ops" / "csrc" / Path(relp)
+        if not t.exists():
+            fail(f"除外対象の kernel 生ソースが見つからない: {t}")
+        t.unlink()
+    print(
+        f"  removed {len(EXCLUDED_PY_WRAPPERS)} python wrappers, "
+        f"{len(EXCLUDED_CSRC_CPP)} csrc sources, "
+        f"{len(EXCLUDED_CSRC_EXTRA)} kernel sources"
+    )
 
 
 def patch_ops_init(dst: Path) -> None:
@@ -175,6 +305,47 @@ def patch_pybind(dst: Path) -> None:
         s = s.replace(block, "")
     p.write_text(s, encoding="utf-8")
     print("  patched mmcv/ops/csrc/pytorch/pybind.cpp")
+
+
+def _patch_cudabind_file(p: Path, blocks: list[str]) -> None:
+    s = p.read_text(encoding="utf-8")
+    for block in blocks:
+        if block not in s:
+            fail(f"{p.name} に Expected ブロックが見つからない:\n{block[:120]}...")
+        s = s.replace(block, "")
+    if RESIDUE_NAME_RE.search(s):
+        fail(f"{p.name} に除外オペの参照が残っている")
+    p.write_text(s, encoding="utf-8")
+    print(f"  patched {p.relative_to(p.parents[4]).as_posix()}"
+          f" ({len(blocks)} blocks removed)")
+
+
+def patch_cuda_cudabind(dst: Path) -> None:
+    # CUDA ビルドは mmcv_setup_py315.py が pytorch/cuda/*.cpp を glob で拾うため、
+    # cudabind.cpp の 5 オペブロック（宣言 + REGISTER_DEVICE_IMPL）を除去しないと
+    # 削除した *_op_impl の未定義参照でリンクに落ちる。
+    _patch_cudabind_file(
+        dst / "mmcv" / "ops" / "csrc" / "pytorch" / "cuda" / "cudabind.cpp",
+        CUDA_CUDABIND_BLOCKS,
+    )
+    # parrots 分岐は Windows ビルドでは使われないが、参照残りを消す（hygiene）
+    _patch_cudabind_file(
+        dst / "mmcv" / "ops" / "csrc" / "parrots" / "cudabind.cpp",
+        PARROTS_CUDABIND_BLOCKS,
+    )
+
+
+def check_no_residue(dst: Path) -> None:
+    """ステージングツリーに 5 オペ名を含むファイル名が残っていたら fail。"""
+    csrc = dst / "mmcv" / "ops" / "csrc"
+    residue = sorted(
+        str(p.relative_to(csrc).as_posix())
+        for p in csrc.rglob("*")
+        if p.is_file() and RESIDUE_NAME_RE.search(p.name)
+    )
+    if residue:
+        fail("mmcv/ops/csrc に残骸ファイルが残っている:\n    " + "\n    ".join(residue))
+    print("  residue check OK: mmcv/ops/csrc に 5 オペ名ファイル 0 件")
 
 
 def set_version(dst: Path, base: str, suffix: str) -> None:
@@ -218,7 +389,9 @@ def main() -> int:
     drop_excluded_ops(dst)
     patch_ops_init(dst)
     patch_pybind(dst)
+    patch_cuda_cudabind(dst)
     set_version(dst, ns.base_version, ns.suffix)
+    check_no_residue(dst)
     print("STAGING OK ->", dst)
     return 0
 

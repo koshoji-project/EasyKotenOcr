@@ -158,12 +158,12 @@ powershell -File scripts\build_wheels.ps1 -Flavor win11-amd64-cu134
 
 | # | 項目 | 担当 | 状態 |
 |---|---|---|---|
-| 1 | stage_mmcv.py 拡張（EXCLUDED_CSRC_EXTRA + cudabind patch） | AMD64 PC | ☐ 未着手 |
-| 2 | ステージング単体テスト（Step 2） | AMD64 PC | ☐ |
-| 3 | win11-amd64-cpu 再ビルド + 検証 3 点 | AMD64 PC | ☐ |
-| 4 | win11-amd64-cu134 再ビルド + 検証 3 点 | AMD64 PC | ☐ |
-| 5 | SHA256SUMS 更新（AMD 分）+ PROVENANCE + コミット | AMD64 PC | ☐ |
-| 6 | win11-arm64-cpu 再ビルド + 検証 | kotengawa (N1X) | ☐ AMD 変更待ち |
+| 1 | stage_mmcv.py 拡張（EXCLUDED_CSRC_EXTRA + cudabind patch） | AMD64 PC | ☑ 完了（9 生ソース削除 + pytorch/cuda cudabind 4 ブロック + parrots cudabind 2 ブロック + 残骸自己チェック） |
+| 2 | ステージング単体テスト（Step 2） | AMD64 PC | ☑ 完了（residue check OK: mmcv/ops/csrc に 5 オペ名ファイル 0 件） |
+| 3 | win11-amd64-cpu 再ビルド + 検証 3 点 | AMD64 PC | ☑ 完了 2026-11-21（scan CLEAN / VERIFY OK / OCR .txt が 11-19 出力とバイト一致。sha `36C52A50…`） |
+| 4 | win11-amd64-cu134 再ビルド + 検証 3 点 | AMD64 PC | ☑ 完了 2026-11-21（同上。CUDA 実走含め。9.5MB / sha `04A6612A…`） |
+| 5 | SHA256SUMS 更新（AMD 分）+ PROVENANCE + コミット | AMD64 PC | ☑ 完了 2026-11-21（AMD 2 行のみ更新、ARM 2 行は不変を確認済み） |
+| 6 | win11-arm64-cpu 再ビルド + 検証 | kotengawa (N1X) | ☐ AMD 変更待ち（stage_mmcv.py の変更はコミット済み、取得可能） |
 | 7 | win11-arm64-cu135 再ビルド + 検証 | kotengawa (N1X) | ☐ AMD 変更待ち |
 | 8 | SHA256SUMS 更新（ARM 分）+ PROVENANCE + コミット | kotengawa (N1X) | ☐ |
 | 9 | push | ユーザー | ☐ 4 flavor 揃ってから判断 |
