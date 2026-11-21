@@ -1,10 +1,35 @@
-# Easy古典OCR(ver.1)
+# Easy古典OCR(ver.2)
 
 古典籍をテキスト化するためのOCRアプリケーションです。 
 本プログラムは、国立国会図書館の[NDLラボ](https://lab.ndl.go.jp)が公開している[NDL古典籍OCR_cli ver.3](https://github.com/ndl-lab/ndlkotenocr_cli)を基に、DockerやLinuxに関する知識がないユーザーでも利用できるように改変を加えたものです。
 
 
 本プログラムに適用するライセンスは、CC BY 4.0です。ライセンス詳細は[LICENSE](./LICENSE)をご覧ください。
+
+## リリース情報
+
+**Easy古典OCR ver.2**（2026年11月21日 リリース）
+
+| 項目 | 内容 |
+|---|---|
+| 対応環境 | Windows 11（AMD64 / ARM64 × CPU / NVIDIA GPU）の4フレーバー |
+| 実行基盤 | Python 3.15.2 / PyTorch 2.15（uv により自動導入） |
+| 同梱 mmcv ホイール | `2.1.0+easykotenocr.3`（フレーバー別ビルド） |
+
+### 変更履歴
+
+**ver.2（2026-11-21）**
+- Windows on ARM64（Snapdragon Xシリーズ等）に対応。`win11-arm64-cpu` と、RTX Spark / DGX Spark クラスの NVIDIA GPU を使う `win11-arm64-cu135` を追加し、AMD64 の CPU/GPU と合わせて **4フレーバー構成**とした
+- ビルド済みホイール（`wheels\`）をフレーバー別に同梱する配布形態に変更し、**Visual Studio Build Tools や CUDA Toolkit を自分でインストールせずに**インストールできるようにした
+- インストールを **uv ベース**に変更（Python 3.15.2 / PyTorch 2.15 統一）。旧 `EasyKotenOcr-installer.zip`（Python 3.10系）は廃止
+- `start_ocr.bat` が起動時にフレーバーを自動判定し、仮想環境の自己修正（`tools\apply_venv_patches.py`）と環境検証（`scripts\verify_env.py`）を自動実行するようにした
+- ビルド時にライセンス上除外した演算子（upfirdn2d、fused_bias_leakyrelu、bias_act、filtered_lrelu、conv2d_gradfix）を、Pythonラッパー・コンパイル対象・ホイール内同梱ソースのすべてから完全に除去した
+
+**ver.1**
+- Docker ベースの NDL古典籍OCR_cli を Windows Native 環境で動作するように改変（WSL / Hyper-V 不要）
+- CPU のみでの OCR 処理に対応
+- OCR 実行用バッチファイル、文字列認識結果の画像出力オプション、シンプルな入出力フォルダー構成を追加
+
 ## インストール
 
 2026年11月の統合作業により、本リポジトリは **4つの環境（フレーバー）** に対応しました。インストール手順も変更されています。古い `EasyKotenOcr-installer.zip`（Python 3.10 系の旧インストーラー）は**現在の構成では動作しないため使用しないでください**。
