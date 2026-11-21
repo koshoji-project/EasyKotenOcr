@@ -4,7 +4,6 @@
 対象: `C:\easykotenocr`（windows11+amd64+python3.15.2 作業フォルダー）
 この文書は**方針の記録**。当初は設計のみだったが、§11（amd64 の 2 flavor）と §12（ARM の受け皿）は
 **実施済み**なので、実測値と結果が書いてある。
-**全体の引継ぎ資料は `HANDOVER.md`**（N1X への環境移管が理由・持ち物・問題点の一覧）。
 
 > **決定（2026-11-19）**: torch は **2.15.0 に統一**、GPU amd64 の CUDA variant は **cu134** を採用。
 > これにより flavor 2 の id は `win11-amd64-cu130` → **`win11-amd64-cu134`** に変わる（§10 決定記録）。
@@ -353,7 +352,7 @@ venv は `build\<flavor>\venv` に集約（`UV_PROJECT_ENVIRONMENT` で指定）
 
 ## 12. ARM 2 flavor の受け皿（2026-11-19 設置）
 
-N1X（RTX Spark / DGX Spark）側の成果物を受け取るための受け皿を置いた。手順書の本体は **`HANDOFF-N1X.md`**。
+N1X（RTX Spark / DGX Spark）側の成果物を受け取るための受け皿を置いた。
 
 | 追加したもの | 用途 |
 |---|---|
@@ -408,4 +407,4 @@ mmcv wheel 不足と `uv.lock` 不足で、N1X 成果物が揃えば 0 になる
 
 **未コミット**（コミットは実施側の判断）。`git add -A -n` の dry run では **追加 53 / 削除登録 2** で、
 モデル実体・wheel は 0 本。`mmcv\` は入れ子 git のため **git 管理しない**と決定し `.gitignore` に追加済み
-（N1X 側で `git clone --depth 1 --branch v2.1.0 ...` で復元。詳細は `HANDOVER.md` §8.1）。
+（N1X 側で `git clone --depth 1 --branch v2.1.0 ...` で復元）。

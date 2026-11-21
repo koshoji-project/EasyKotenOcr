@@ -54,7 +54,7 @@ EXCLUDED_CSRC_CPP = [
     "upfirdn2d.cpp",
 ]
 # wheel の package data として同梱されていた kernel 生ソースの実体
-# （mmcv/ops/csrc/ からの相対パス。HANDOVER-TO-AMD64.md §3/§4 Step 1）
+# （mmcv/ops/csrc/ からの相対パス。除外根拠は mmcv LICENSE の NVIDIA 由来ファイル表記）
 EXCLUDED_CSRC_EXTRA = [
     "pytorch/cuda/bias_act_cuda.cu",
     "pytorch/cuda/filtered_lrelu.cu",
