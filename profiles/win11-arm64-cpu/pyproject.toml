@@ -1,7 +1,7 @@
 # ============================================================
 # win11-arm64-cpu (Release 3) — ARM64 CPU flavor
 #   - torch: +cpu の win_arm64 wheel は 2.15 系に供給が無い
-#     （RELEASE_LAYOUT.md §8-③）→ nvtorch_oot の torch 2.15.0+cu134 を
+#     → nvtorch_oot の torch 2.15.0+cu134 を
 #     入れ、実行時だけ device: cpu（config/config.cpu.yml）で使う。
 #   - mmcv: 本 flavor 専用 wheel（5 オペ除去 + local tag .3、CPU-only _ext）。
 #     ビルド時は CUDA_VISIBLE_DEVICES= を空にして GPU を隠し、

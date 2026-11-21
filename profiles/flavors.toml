@@ -1,4 +1,4 @@
-# EasyKotenOCR release flavors — 差分の単一ソース（詳細は RELEASE_LAYOUT.md）
+# EasyKotenOCR release flavors — 差分の単一ソース
 version = 1
 
 [flavor.win11-amd64-cpu]
@@ -28,7 +28,7 @@ mmcv_wheel = "wheels/win11-amd64-cu134/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win
 [flavor.win11-arm64-cpu]
 arch = "arm64"
 python = "3.15"
-torch = "torch==2.15.0+cu134"      # +cpu の win_arm64 は供給無し（RELEASE_LAYOUT.md §8-③）。実行時 device=cpu
+torch = "torch==2.15.0+cu134"      # +cpu の win_arm64 は供給無し。実行時 device=cpu
 torchvision = "torchvision==0.29.2+cu134"
 index = "https://pypi.nvidia.com/nvtorch_oot/"
 device = "cpu"
