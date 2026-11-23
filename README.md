@@ -46,7 +46,7 @@
 
 ### ステップ1: 配布zipをダウンロードして解凍する
 
-配布ページの **`EasyKotenSetup-v2.1.0.zip`** をダウンロードし、任意の場所（ダブルクリックでもOK）で解凍してください。中身は「**セットアップ.bat**」1つと説明書だけです。
+配布ページの [**`EasyKotenSetup-v2.1.0.zip`**](https://github.com/koshoji-project/EasyKotenOcr/releases/download/v2.1.0/EasyKotenSetup-v2.1.0.zip) をダウンロードし、任意の場所（ダブルクリックでもOK）で解凍してください。中身は「**セットアップ.bat**」1つと説明書だけです。
 
 ### ステップ2: 「セットアップ.bat」をダブルクリックする
 
