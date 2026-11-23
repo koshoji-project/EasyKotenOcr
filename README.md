@@ -103,8 +103,8 @@
 |---|---|---|
 | win11-amd64-cu134（Nvidia GPU） | 約1秒 |Ryzen 9900X+RTX5090|
 | win11-amd64-cpu | 約12秒 |Ryzen 9900X CPUのみ使用|
-| win11-arm64-cu135（Nvidia GPU） | 約3秒 |RTX Spark+GPU有効|
-| win11-arm64-cpu | 約50秒 |RTX Spark CPUのみ使用|
+| win11-arm64-cu135（Nvidia GPU） | 約3秒 |RTX Spark N1X+内蔵GPU|
+| win11-arm64-cpu | 約50秒 |RTX Spark N1X CPUのみ使用|
 
 **注意**: GPUとCPUでは浮動小数点演算の差分により、認識結果が一部異なることがあります。
 
