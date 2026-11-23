@@ -48,4 +48,4 @@ time.txt
 #  - EasyKoten/EasyKotenOcr-installer.zip は 2026-11-21 に git rm 済み（旧配布物）。
 
 # 旧配布インストーラー zip（2026-11-21 削除。再追加しないこと）
-EasyKoten/*.zip
+# インストーラーのビルド成果物（配布 zip / ホイール zip）は上の build/ 全体で除外済み。

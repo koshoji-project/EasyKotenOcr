@@ -1,7 +1,7 @@
-ad41840dd4cf26ddb418e3cdd4aa7274b921a2a678367f3d4a70870b6767d45c  mmcv-2.1.0+easykotenocr.2-cp315-cp315-win_amd64.whl
-24f173b7a1470d9d2ecda956acd9978e504dc7f5d709a3e8b00df385d25bc2a7  mmengine-0.10.7+easykotenocr.1-py3-none-any.whl
-cb7f0b80c612229614ab88b44a045e36e0fafe6498a96ac51e247310ec9fc0c2  mmpretrain-1.2.0+easykotenocr.1-py2.py3-none-any.whl
-36c52a50305cd7a32253bba0766e3574625f8fb2600d220cf73828ca6ed3eed8  win11-amd64-cpu/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_amd64.whl
-04a6612ae05c5658bd94675e8b79eb767b830c5f931e5003b4981bc60dceb8b5  win11-amd64-cu134/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_amd64.whl
-ad6f795a96485ba921a7d91d564e268bb688199454329578e68d30cba2d64d77  win11-arm64-cpu/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_arm64.whl
-d65ca9abee6963cd7cbb39090cbcbff9ad1b5c8ee749c2510a2a13aaf66a887d  win11-arm64-cu135/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_arm64.whl
+ad41840dd4cf26ddb418e3cdd4aa7274b921a2a678367f3d4a70870b6767d45c  wheels/mmcv-2.1.0+easykotenocr.2-cp315-cp315-win_amd64.whl
+24f173b7a1470d9d2ecda956acd9978e504dc7f5d709a3e8b00df385d25bc2a7  wheels/mmengine-0.10.7+easykotenocr.1-py3-none-any.whl
+cb7f0b80c612229614ab88b44a045e36e0fafe6498a96ac51e247310ec9fc0c2  wheels/mmpretrain-1.2.0+easykotenocr.1-py2.py3-none-any.whl
+36c52a50305cd7a32253bba0766e3574625f8fb2600d220cf73828ca6ed3eed8  wheels/win11-amd64-cpu/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_amd64.whl
+04a6612ae05c5658bd94675e8b79eb767b830c5f931e5003b4981bc60dceb8b5  wheels/win11-amd64-cu134/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_amd64.whl
+ad6f795a96485ba921a7d91d564e268bb688199454329578e68d30cba2d64d77  wheels/win11-arm64-cpu/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_arm64.whl
+d65ca9abee6963cd7cbb39090cbcbff9ad1b5c8ee749c2510a2a13aaf66a887d  wheels/win11-arm64-cu135/mmcv-2.1.0+easykotenocr.3-cp315-cp315-win_arm64.whl

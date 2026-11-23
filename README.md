@@ -8,15 +8,24 @@
 
 ## リリース情報
 
-**Easy古典OCR ver.2**（2026年11月21日 リリース）
+**Easy古典OCR ver.2.1**（2026年11月22日 リリース）
 
 | 項目 | 内容 |
 |---|---|
-| 対応環境 | Windows 11（AMD64 / ARM64 × CPU / NVIDIA GPU）の4フレーバー |
-| 実行基盤 | Python 3.15.2 / PyTorch 2.15（uv により自動導入） |
-| 同梱 mmcv ホイール | `2.1.0+easykotenocr.3`（フレーバー別ビルド） |
+| 対応環境 | **Windows 11 のみ**（AMD64 / ARM64 × CPU / NVIDIA GPU）の4フレーバー |
+| インストール | 「セットアップ.bat」をダブルクリックするだけ（git・uv・Python の導入はセットアップが自動で行います） |
+| 実行基盤 | Python 3.15.2 / PyTorch 2.15 |
+| 同梱 mmcv ホイール | `2.1.0+easykotenocr.3`（フレーバー別ビルド。セットアップが自動で入手します） |
 
 ### 変更履歴
+
+**ver.2.1（2026-11-22）**
+- ワンクリックインストーラーを追加。配布zip内の「**セットアップ.bat**」をダブルクリックするだけで、git・uv・Python 3.15.2・実行環境・ビルド済みホイール・学習済みモデルのすべてが自動で入るようにした（**コマンドプロンプトは一切不要**）
+- インストーラーは日本語GUI（PowerShell + WinForms、OS標準のみで動作・追加ダウンロードなし）で、PCの構成を見てフレーバーを自動判定。途中で失敗しても「セットアップ.bat」を再実行すれば続きから再開できる（冪等）
+- ビルド済みホイール（mmcv / mmengine / mmpretrain）を GitHub Releases の **`v2.1.0`** アセット（単一 zip `wheels-built-v2.1.0.zip`）からオンラインダウンロードする方式に変更。**インストールにはインターネット接続が必要です**
+- 環境変数の恒久的な変更を一切行わない方式に変更（PCの他のPython環境に影響しません）
+- OS判定をWMI基準に修正（ARM64マシンでの誤判定を解消）
+- Windows 11 のみ対応（Windows 10 は対象外）
 
 **ver.2（2026-11-21）**
 - Windows on ARM64（Snapdragon Xシリーズ等）に対応。`win11-arm64-cpu` と、RTX Spark / DGX Spark クラスの NVIDIA GPU を使う `win11-arm64-cu135` を追加し、AMD64 の CPU/GPU と合わせて **4フレーバー構成**とした
@@ -32,72 +41,57 @@
 
 ## インストール
 
-2026年11月の統合作業により、本リポジトリは **4つの環境（フレーバー）** に対応しました。インストール手順も変更されています。古い `EasyKotenOcr-installer.zip`（Python 3.10 系の旧インストーラー）は**現在の構成では動作しないため使用しないでください**。
+> **この手順どおりに進めれば完了します。コマンドの入力は一切不要です。**
+> 前提: Windows 11 のPC、インターネット接続、ディスク空き容量 **15GB以上**（GPUフレーバーは約12GBの実行環境が入ります）。
 
-### ステップ1: ご自分のPCに合うフレーバーを選ぶ
+### ステップ1: 配布zipをダウンロードして解凍する
 
-| フレーバーID | 該当するPC | GPU加速 |
-|---|---|---|
-| `win11-amd64-cpu` | Windows 11（64ビット / Intel・AMD製CPU）、NVIDIA GPUなし | なし |
-| `win11-amd64-cu134` | Windows 11（64ビット）＋ NVIDIA GPU（CUDA 13.4 対応ドライバ入り） | あり |
-| `win11-arm64-cpu` | Windows 11 on ARM（Snapdragon等）、NVIDIA GPUなし | なし |
-| `win11-arm64-cu135` | Windows 11 on ARM ＋ NVIDIA GPU（RTX Spark / DGX Spark クラス、CUDA 13.5） | あり |
+配布ページの **`EasyKotenSetup-v2.1.0.zip`** をダウンロードし、任意の場所（ダブルクリックでもOK）で解凍してください。中身は「**セットアップ.bat**」1つと説明書だけです。
 
-- GPUを使うフレーバーでは、NVIDIA公式の**最新版のグラフィックドライバ**を先にインストールしてください（CUDA 13.4 / 13.5 対応版）。CUDA Toolkit や Visual Studio Build Tools を自分で入れる必要はありません。
-- 迷ったら一般的なPCは `win11-amd64-cpu`、ARM PCは `win11-arm64-cpu` を選んでください。NVIDIA GPUが載っている場合は対応する cu 付きフレーバーが大幅に高速です。
+### ステップ2: 「セットアップ.bat」をダブルクリックする
 
-### ステップ2: 前提ソフトを入れる
+「セットアップ」の画面が開きます。
 
-| ソフト | 導入方法 |
-|---|---|
-| git | [git-scm.com](https://git-scm.com/downloads/win) からダウンロードしてインストール |
-| uv | コマンドプロンプトで `winget install --id astral-sh.uv` |
+- 「**Windows の PC が保護しました**」という青い画面が出ることがあります。その場合は「**その他のオプション**」をクリック →「**実行します**」を選択してください（プログラムは安全ですが、ダウンロードしたファイルだとWindowsが確認を出します）。
 
-**uv は必ず最新版を使ってください。** 同梱するロックファイルは新しい形式（revision 5）で書かれており、古い uv では読み込めずインストールに失敗します。すでに uv が入っている場合は `uv self update` で更新してから進めてください（uv が古いというエラーが出た場合も、まず `uv self update` を試してください）。
+### ステップ3: 画面の案内にしたがう
 
-Python 3.15.2 は uv が自動的にダウンロードして使うため、Python を手動でインストールする必要はありません。
+1. **使うPCの種類**（CPUのみ / NVIDIA GPUあり）をたずねられます。迷ったら「**CPUのみ**」で構いません（GPUがあってもあとで自動的に切り替えられます）。
+2. **インストール先フォルダー**をたずねられます。特別な理由がなければ **`C:\easykotenocr`** のまま「インストールを実行」を押してください。
+3. もらうディスク容量の確認を押すと、インストールが始まります。
 
-### ステップ3: プログラム本体を入手する
+**所要時間の目安: 30〜90分**（インターネットの速度や、ダウンロードする大きさによります。GPUフレーバーは数GBをダウンロードします）。画面が止まっているように見えても、ログファイル（インストールフォルダー内の `install.log`）で進んでいます。**ウィンドウを閉じずにそのまま置いてください。**
 
-**Gitリポジトリには、専用の mmcv ビルド済みホイール（`wheels\`）と学習済みモデルの実体は含まれていません。** これらは配布パッケージ（zip）に同梱して配布しています。配布パッケージをダウンロードし、任意のフォルダー（例: `C:\easykotenocr`）に展開してください。
+### インストールが終わったら
 
-展開したフォルダーに `wheels\win11-<自分のフレーバー>\` が存在することを確認してください（ここにフレーバー専用の mmcv ホイールが入っています）。
+1. デスクトップに「**Easy古典OCR**」というアイコンができます
+2. 読み取りたい画像をフォルダー **`c:\ocr\in`** に入れます
+3. 「Easy古典OCR」アイコンをダブルクリックすると、OCRが実行され、`c:\ocr\out-<お使いのPCの種類>` フォルダー（例: `c:\ocr\out-win11-amd64-cpu`）にテキストが出力されます
 
-### ステップ4: 実行環境を作る
+### うまくいかないとき
 
-コマンドプロンプトを開き、インストール先に移動してから、フレーバー用の仮想環境を作成します。以下は `win11-amd64-cu134` の例です。自分のフレーバーIDに読み替えてください。
+- **もう一度「セットアップ.bat」をダブルクリックしてください。** できた部分は再利用され、続きからやり直します（何度も実行して問題ありません）。
+- それでも失敗する場合は、画面に出るエラー表示と、インストールフォルダー内の **`install.log`**（セットアップ画面の「ログを開く」ボタンから開けます）をご用意して問い合わせてください。
+- セキュリティソフトや会社のPC管理ソフトがダウンロードをブロックすることがあります。その場合は `install.log` に記録されます。
 
-```
-cd /d C:\easykotenocr
-set UV_PROJECT_ENVIRONMENT=build\win11-amd64-cu134\venv
-uv sync --project profiles\win11-amd64-cu134
-```
+### アップデート（新しいバージョンが出たとき）
 
-- インターネット経由でパッケージをダウンロードするため時間がかかります（GPUフレーバーは数GB）。ディスク空きは GPU フレーバーで約 12GB、CPU フレーバーで約 7GB を目安にしてください。
+新しい配布zipをダウンロードして「セットアップ.bat」を実行し、前回と同じインストール先フォルダーを指定すると、プログラムの本体がそのバージョンに更新されます。`c:\ocr\in` の入力データや出力は影響を受けませんが、**インストールフォルダー内の `config.yml` など設定ファイルを手動で編集したことがある場合は、アップデートで初期状態に戻ることがあります。** その場合は事前に設定ファイルをコピーしてバックアップしてから実行してください。
 
-### ステップ5: 学習済みモデルをダウンロードする
+### アンインストール（削除）方法
 
-NDLラボから学習済みモデルをダウンロードし、次の場所に配置します。ブラウザで直接ダウンロードしても、同梱の `EasyKoten\download_models.py` を venv の Python で実行しても構いません。
+本プログラムはレジストリに何も書き込まないため、次の手順で完全に削除できます。
 
-| モデル | ダウンロードURL | 配置先 |
-|---|---|---|
-| 文字認識モデル | <https://lab.ndl.go.jp/dataset/ndlkotensekiocr/trocr/model-ver2.zip> | zipを解凍して `src\text_kotenseki_recognition\model-ver2\` ができるように展開 |
-| レイアウト抽出モデル | <https://lab.ndl.go.jp/dataset/ndlkotensekiocr/layoutmodel/ndl_kotenseki_layout_ver3.pth> | `src\ndl_kotenseki_layout\models\ndl_kotenseki_layout_ver3.pth` |
-
-### ステップ6: 環境を確認する
-
-インストール先で次の2つを実行し、両方が成功すればインストール完了です（フレーバーIDは自分のものに読み替えてください）。
-
-```
-build\win11-amd64-cu134\venv\Scripts\python.exe tools\apply_venv_patches.py
-build\win11-amd64-cu134\venv\Scripts\python.exe scripts\verify_env.py --flavor win11-amd64-cu134
-```
-
-`verify_env.py` が `VERIFY OK` と表示すればOKです（`tools\apply_venv_patches.py` は `start_ocr.bat` が毎回自動実行しますが、手動で実行しても安全です）。
+1. デスクトップの「**Easy古典OCR**」アイコンを削除します
+2. インストールフォルダー（既定では **`C:\easykotenocr`**）を削除します
+3. OCRの入出力フォルダー（**`C:\ocr`**）も削除しても構いません（中のデータも消えます）
+4. このPCでEasy古典OCR以外にuvを使っていない場合は、次のフォルダーも削除すると約3〜10GBのディスク容量が空きます（uvが管理するPythonとダウンロードキャッシュです）
+   - `C:\Users\<ユーザー名>\.local\bin`（uv本体）
+   - `C:\Users\<ユーザー名>\AppData\Roaming\uv`（uv管理のPythonとキャッシュ）
 
 ## OCRの実行
 
-`start_ocr.bat` をダブルクリックして実行してください。PCの構成（CPUアーキテクチャとNVIDIA GPUの有無）を見て、使うフレーバーを自動的に選びます。
+`start_ocr.bat`（またはデスクトップの「Easy古典OCR」アイコン）をダブルクリックして実行してください。PCの構成（CPUアーキテクチャとNVIDIA GPUの有無）を見て、使うフレーバーを自動的に選びます。
 
 - 入力フォルダー: `c:\ocr\in`、出力フォルダー: `c:\ocr\out-<フレーバーID>`、実行時オプションは `-s b -a` が指定されています。必要に応じて書き換えてください。
 - フレーバーを明示することもできます: `start_ocr.bat win11-amd64-cu134`
@@ -127,11 +121,12 @@ build\win11-amd64-cu134\venv\Scripts\python.exe scripts\verify_env.py --flavor w
 ## 改変の内容
 1. Dockerを用いた仮想化技術を使用せずに、Windows Native 環境上で動作するようにしました。WSLやHyper-Vも不要です。
 2. GPUを用いずにCPUのみを使用してOCR処理を行うようにしました。処理速度は落ちますが、NVIDIA製のGPUを搭載していないPCでも動作可能になりました。
-3. AMD64 と Windows on ARM の両対応とし、さらに GPU 有無を含む4通りのフレーバー構成としました。mmcv などの必須パッケージは各フレーバー用にビルド済みホイールとして同梱し、Visual Studio Build Tools 不要でインストールできるようにしました。
+3. AMD64 と Windows on ARM の両対応とし、さらに GPU 有無を含む4通りのフレーバー構成としました。mmcv などの必須パッケージは各フレーバー用にビルド済みホイールとして配布し、Visual Studio Build Tools 不要でインストールできるようにしました。
 4. uv を使うことで、Python のバージョン違いによる環境の破壊を防いでいます。
 5. コマンドラインの入力が苦手な方向けに、OCRを実行するためのバッチファイルを用意しました。
 6. OCR実行時のオプションとして文字列認識結果を画像ファイルとして出力する機能を追加しました。
 7. 入出力フォルダーの構成を判りやすくシンプルにしました。
+8. ver.2.1 で、コマンド操作不要のワンクリックインストーラー（「セットアップ.bat」＋日本語GUI）を追加しました。
 
 ## 環境構築後のフォルダー構成（参考）
 ```
@@ -140,7 +135,7 @@ EasyKotenOCR
 │   └── win11-amd64-cu134\venv : 各フレーバーの仮想環境
 ├── cli : CLIコマンド的に利用するPythonスクリプトの格納されたフォルダー
 ├── cv2_shim : 仮想環境用に同梱した opencv パッケージの差し替え用フォルダー
-├── EasyKoten : 学習済みモデルのダウンロードスクリプト等が格納されたフォルダー
+├── easykoten_installer : インストーラー開発一式（セットアップ.bat・setup スクリプト群・配布zip / ホイールzip の生成スクリプト）が格納されたフォルダー
 ├── profiles : フレーバー別の依存パッケージ定義（uv用プロファイル）
 │   ├── win11-amd64-cpu
 │   ├── win11-amd64-cu134
@@ -153,7 +148,7 @@ EasyKotenOCR
 │   └── text_kotenseki_recognition : 文字認識処理のソースコードの格納されたフォルダー
 ├── tools : 仮想環境への修正適用スクリプト（apply_venv_patches.py）が格納されたフォルダー
 ├── vendor : mmcv のビルド用パッチ等が格納されたフォルダー
-├── wheels : フレーバー別の mmcv ビルド済みホイール（配布パッケージにのみ同梱）
+├── wheels : ビルド済みホイール（セットアップが GitHub Releases から入手する）
 ├── config : CPUフレーバー用の推論設定ファイルのフォルダー
 │   └── config.cpu.yml : device: cpu 用設定
 ├── config.yml : サンプルの推論設定ファイル（GPU用）
@@ -162,7 +157,6 @@ EasyKotenOCR
 ├── README.md : このファイル
 └── start_ocr.bat : main.pyを起動するためのバッチファイル（フレーバー自動判定）
 ```
-
 
 
 ### 推論処理の実行
@@ -215,7 +209,7 @@ input_root/  (ユーザー指定)
  ├── 01_岩舩山縁起絵巻_第一巻 (文書毎のサブフォルダ名)
  │   ├── 詞書_page01.jpg
  │   ├── 詞書_page02.jpg
- │   ・・・
+ 	・・・
  │   └── 詞書_page10.jpg
  └── 02_開帳差免帳_第一冊 (文書毎のサブフォルダ名)
      ├── 01_延享元年_下野國_岩舩山高勝寺.jpg
@@ -273,11 +267,75 @@ python main.py infer input_root output_dir -a
 #### オプション情報の保存
 出力フォルダーでは、実行時に指定したオプション情報が`opt.json`に保存されています。
 
+---
 
+## 【上級者向け】手動でのインストール手順
 
+> 通常のユーザーは上の「インストール」（セットアップ.bat）を使ってください。この節は、コマンド操作ができる方向けの手動手順です（セットアップ.batが失敗したときの原因切り分けにも使えます）。
 
+2026年11月の統合作業により、本リポジトリは **4つの環境（フレーバー）** に対応しました。古い `EasyKotenOcr-installer.zip`（Python 3.10 系の旧インストーラー）は**現在の構成では動作しないため使用しないでください**。
 
+### ステップ1: ご自分のPCに合うフレーバーを選ぶ
 
+| フレーバーID | 該当するPC | GPU加速 |
+|---|---|---|
+| `win11-amd64-cpu` | Windows 11（64ビット / Intel・AMD製CPU）、NVIDIA GPUなし | なし |
+| `win11-amd64-cu134` | Windows 11（64ビット）＋ NVIDIA GPU（CUDA 13.4 対応ドライバ入り） | あり |
+| `win11-arm64-cpu` | Windows 11 on ARM（Snapdragon等）、NVIDIA GPUなし | なし |
+| `win11-arm64-cu135` | Windows 11 on ARM ＋ NVIDIA GPU（RTX Spark / DGX Spark クラス、CUDA 13.5） | あり |
 
+- GPUを使うフレーバーでは、NVIDIA公式の**最新版のグラフィックドライバ**を先にインストールしてください（CUDA 13.4 / 13.5 対応版）。CUDA Toolkit や Visual Studio Build Tools を自分で入れる必要はありません。
+- 迷ったら一般的なPCは `win11-amd64-cpu`、ARM PCは `win11-arm64-cpu` を選んでください。NVIDIA GPUが載っている場合は対応する cu 付きフレーバーが大幅に高速です。
 
+### ステップ2: 前提ソフトを入れる
 
+| ソフト | 導入方法 |
+|---|---|
+| git | [git-scm.com](https://git-scm.com/downloads/win) からダウンロードしてインストール |
+| uv | コマンドプロンプトで `winget install --id astral-sh.uv` |
+
+**uv は必ず最新版を使ってください。** 同梱するロックファイルは新しい形式（revision 5）で書かれており、古い uv では読み込めずインストールに失敗します。すでに uv が入っている場合は `uv self update` で更新してから進めてください（uv が古いというエラーが出た場合も、まず `uv self update` を試してください）。
+
+Python 3.15.2 は uv が自動的にダウンロードして使うため、Python を手動でインストールする必要はありません。
+
+### ステップ3: プログラム本体を入手する
+
+Gitリポジトリには、専用の mmcv 等のビルド済みホイール（`wheels\`）と学習済みモデルの実体は含まれていません。
+
+1. リポジトリをクローン（または Releases の `v2.1.0` ソースをダウンロード）し、任意のフォルダー（例: `C:\easykotenocr`）に展開してください。
+2. GitHub Releases の `v2.1.0` アセットから **`wheels-built-v2.1.0.zip`** をダウンロードし、**クローン先フォルダーの直下（リポジトリルート）に展開**して `wheels\` を作成してください。
+3. `wheels\SHA256SUMS.txt` にしたがって全ホイールの SHA256 を検証してください（Windows なら `Get-FileHash` を使うとよいでしょう。1つでも不一致・欠損があれば、そのzipをダウンロードし直してください）。
+
+`wheels\` にはフレーバー専用の mmcv ホイール（`wheels\win11-<フレーバー>\`）と mmengine / mmpretrain のホイールが入っています。PyTorch などのその他のパッケージは、次のステップの `uv sync` がインターネット上の公式リポジトリ（PyTorch 公式 / NVIDIA / PyPI）から取得します。
+
+### ステップ4: 実行環境を作る
+
+コマンドプロンプトを開き、インストール先に移動してから、フレーバー用の仮想環境を作成します。以下は `win11-amd64-cu134` の例です。自分のフレーバーIDに読み替えてください。
+
+```
+cd /d C:\easykotenocr
+set UV_PROJECT_ENVIRONMENT=build\win11-amd64-cu134\venv
+uv sync --project profiles\win11-amd64-cu134
+```
+
+- インターネット経由でパッケージをダウンロードするため時間がかかります（GPUフレーバーは数GB）。ディスク空きは GPU フレーバーで約 12GB、CPU フレーバーで約 7GB を目安にしてください。
+
+### ステップ5: 学習済みモデルをダウンロードする
+
+NDLラボから学習済みモデルをダウンロードし、次の場所に配置します（ブラウザで直接ダウンロードしてください）。
+
+| モデル | ダウンロードURL | 配置先 |
+|---|---|---|
+| 文字認識モデル | <https://lab.ndl.go.jp/dataset/ndlkotensekiocr/trocr/model-ver2.zip> | zipを解凍して `src\text_kotenseki_recognition\model-ver2\` ができるように展開 |
+| レイアウト抽出モデル | <https://lab.ndl.go.jp/dataset/ndlkotensekiocr/layoutmodel/ndl_kotenseki_layout_ver3.pth> | `src\ndl_kotenseki_layout\models\ndl_kotenseki_layout_ver3.pth` |
+
+### ステップ6: 環境を確認する
+
+インストール先で次の2つを実行し、両方が成功すればインストール完了です（フレーバーIDは自分のものに読み替えてください）。
+
+```
+build\win11-amd64-cu134\venv\Scripts\python.exe tools\apply_venv_patches.py
+build\win11-amd64-cu134\venv\Scripts\python.exe scripts\verify_env.py --flavor win11-amd64-cu134
+```
+
+`verify_env.py` が `VERIFY OK` と表示すればOKです（`tools\apply_venv_patches.py` は `start_ocr.bat` が毎回自動実行しますが、手動で実行しても安全です）。

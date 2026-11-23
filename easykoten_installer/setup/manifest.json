@@ -1,0 +1,49 @@
+﻿{
+  "schema": 1,
+  "product": "EasyKotenOCR",
+  "product_ja": "Easy古典OCR",
+  "version": "2.1.0",
+  "tag": "v2.1.0",
+  "repo": "https://github.com/koshoji-project/EasyKotenOcr",
+  "release_base": "https://github.com/koshoji-project/EasyKotenOcr/releases/download/v2.1.0",
+  "wheel_archive": {
+    "zip": "wheels-built-v2.1.0.zip",
+    "extract_to": ".",
+    "_note": "GitHub Releases tag v2.1.0 の資産。wheels\\ に実在するのは自前ビルド mmcv/mmengine/mmpretrain のみ（計42MB、2026-11-22 実測）で、torch/onnxruntime 等は各 profile の index 指定で uv sync がオンライン解決する（download.pytorch.org / pypi.nvidia.com / PyPI）。そのため 1アセット1共有zip に統合。展開後 wheels/SHA256SUMS.txt で全件ハッシュ検証（zip 同梱なので WindowsApps の tar.exe 回避）"
+  },
+  "mingit": {
+    "url": "https://github.com/git-for-windows/git/releases/download/v2.52.0.windows.1/MinGit-2.52.0-64-bit.zip",
+    "inner_dir": "MinGit",
+    "note": "x64版。ARM64 Windows では x64 エミュレーションで動作（Win11 標準機能）"
+  },
+  "uv_installer_url": "https://astral.sh/uv/install.ps1",
+  "disk_required_gb": { "cpu": 10, "cuda": 15 },
+  "sysdisk_required_gb": 8,
+  "flavors": [
+    { "id": "win11-amd64-cpu",   "wheel": "win11-amd64", "arch": "amd64", "gpu": false, "caption": "一般的なPC（Intel / AMD、NVIDIA GPUなし）" },
+    { "id": "win11-amd64-cu134", "wheel": "win11-amd64", "arch": "amd64", "gpu": true,  "caption": "NVIDIA GPU 搭載のPC（大幅に高速）" },
+    { "id": "win11-arm64-cpu",   "wheel": "win11-arm64", "arch": "arm64", "gpu": false, "caption": "Snapdragon 等の ARM PC" },
+    { "id": "win11-arm64-cu135", "wheel": "win11-arm64", "arch": "arm64", "gpu": true,  "caption": "RTX Spark 等 NVIDIA GPU 搭載の ARM PC" }
+  ],
+  "models": [
+    {
+      "url": "https://lab.ndl.go.jp/dataset/ndlkotensekiocr/trocr/model-ver2.zip",
+      "dest": "src/text_kotenseki_recognition/model-ver2.zip",
+      "extract_to": "src/text_kotenseki_recognition/",
+      "sha256": "",
+      "min_bytes": 1000000000,
+      "label": "文字認識モデル（model-ver2.zip）"
+    },
+    {
+      "url": "https://lab.ndl.go.jp/dataset/ndlkotensekiocr/layoutmodel/ndl_kotenseki_layout_ver3.pth",
+      "dest": "src/ndl_kotenseki_layout/models/ndl_kotenseki_layout_ver3.pth",
+      "extract_to": null,
+      "sha256": "",
+      "min_bytes": 100000000,
+      "label": "レイアウトモデル（ndl_kotenseki_layout_ver3.pth）"
+    }
+  ],
+  "smoke_image": null,
+  "input_folder": "c:/ocr/in",
+  "_release_todo": "models[].sha256 はリリース作業（build_release_assets.ps1）で確定値を記入する。空欄時はハッシュ検証をスキップし警告ログ"
+}
